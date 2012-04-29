@@ -1,0 +1,34 @@
+PACKAGE asp_arch_microblaze_gcc
+VERSION 1.7.0
+
+Makefile.prc
+makeoffset.c
+MANIFEST
+mbelf.l
+microblaze.h
+microblaze_asm.inc
+prc.tf
+prc_cfg1_out.h
+prc_check.tf
+prc_config.c
+prc_config.h
+prc_insn.h
+prc_kernel.h
+prc_rename.def
+prc_rename.h
+prc_sil.h
+prc_stddef.h
+prc_support.S
+prc_syssvc.h
+prc_unrename.h
+prc_user.txt
+start.S
+xps_timer.c
+xps_timer.cfg
+xps_timer.h
+xps_uartl.c
+xps_uartl.cfg
+xps_uartl.h
+
+INCLUDE ../../target/suzume_gcc/MANIFEST
+INCLUDE ../../target/sd1800a_dsp_gcc/MANIFEST

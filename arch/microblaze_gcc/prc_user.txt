@@ -1,0 +1,372 @@
+=====================================================================
+                         Microblazeプロセッサ依存部
+                                  Last Modified: 2010 Oct 11 16:39:50
+=====================================================================
+
+○概要
+
+Microblazeプロセッサ依存部（以下，Microblaze依存部）は，Xilinx社の
+Microblze をターゲットとしている．サポートしているEDKのバージョンは，
+EDK 9.2.01 及び10.1.2，10.1.3である．これ以降のバージョンに関しては，
+プロセッサやコンパイラに大きな変更がなければ，動作させることが可能で
+ある．なお，9.2.02及び10.1に関しては，コンパイラに問題があり，ASPカー
+ネルを動作させることはできない．
+
+Microblazeは，ソフトコアプロセッサであるため，コアの構成や周辺回路の構
+成やアドレス等を変更することが可能である．Microblaze依存部では，コアと
+タイマとUARTのみをサポートしている．アドレス等の設定に関しては，ターゲ
+ット依存部で設定する．
+
+
+○開発環境
+
+カーネルのコンパイルは，EDK 付属している，GCC を用いる．サポートしてい
+るGCCは，EDK 付属のものである．デバッグは，EDK 付属の mdm を用いる．
+xmdstub を用いたデバッグはサポートしていない．
+
+
+○コア構成
+
+ASPカーネルは，Microblaze コアの標準の構成で動作する．すなわち，追加命
+令（divやmulti）を使用していない．これらの追加命令を使用する場合は，タ
+ーゲット依存部で適切にコンパイルオプションを設定する必要がある．
+
+例外に関しては，すべての例外をCPU例外として扱うことが可能である．CPU例
+外ハンドラへ渡すCPU例外フレームについては後述する．
+
+また，FPU及びMMUはサポートしていない．
+
+
+○スモールデータエリア
+
+ASPカーネルのMicroblaze依存部のアセンブラ記述のファイル（start.S, 
+cpu_support.S）は，スモールデータエリアの使用を前提としており，
+Microblaze依存部の Makefile で，スモールデータエリアを有効にするコンパ
+イルオプションの "-mxl-gp-opt" を指定している．スモールデータエリアを
+使用しない場合には，アセンブラ記述のファイルを書き換える必要がある．
+
+    
+○周辺回路
+
+ASPカーネルを動作させるためには，周辺回路として，割込みコントローラ，
+UART，タイマをそれぞれ1個ずつ必要となる．それぞれの名称と，バージョン，
+コンフィギュレーション項目を以下に示す．また，UARTとタイマは割込みを使
+用する．
+
+・割込みコントローラ
+   名称 
+     XPS Interrupt Controller
+   バージョン 
+     v1.00.a
+   コンフィギュレーション項目
+     C_HAS_IPR  1
+     C_HAS_SIE  1
+     C_HAS_CIE  1
+  
+・UART
+   名称 
+     XPS UART Lite
+   バージョン 
+     v1.00.a
+   コンフィギュレーション項目
+     C_COUNT_WIDTH 32
+   割り込み
+     使用  
+
+
+・タイマ
+   名称 
+     XPS Timer/Counter
+   バージョン 
+     v1.00.a
+   コンフィギュレーション項目
+     C_COUNT_WIDTH 32
+   割り込み
+     使用  
+
+
+○CPU例外ハンドラ番号
+
+各例外に対して，次のようにCPU例外ハンドラ番号を割り付ける．それぞれの
+番号は，例外発生時に ESR の下位5bitにセットされる値である．
+
+   0x00    : FSL exception
+   0x01    : Unaligned data access exception
+   0x02    : Illegal op-code exception
+   0x03    : Instraction bus error exception
+   0x04    : Data bus error exception
+   0x05    : Divided by zero exception
+   0x06    : Floating point unit exception
+   0x07    : Privileged instruction exception
+   0x10    : Data storage exception 
+   0x11    : Instruction storage exception 
+   0x12    : Data TLB miss exception
+   0x13    : Instruction TLB miss exception
+
+
+○CPU例外フレーム
+
+CPU例外ハンドラの引数に渡す，CPU例外フレームの構成を次に示す．
+
+     内容                  オフセット
+ MSR                            0
+ ESR                            4
+ EAR                            8
+ 割込み・例外ネストカウント    12
+ 戻りアドレス                  16
+ ipm                           20
+
+
+○未登録の例外
+
+未登録の割込みが発生した場合は，prc_config.c で定義されている．
+default_exc_handler() が呼び出される．default_exc_handler() は，発生し
+た例外の，CPU例外フレームの内容を表示した後，target_exit() を呼び出す．
+
+
+○割り込みハンドラ番号と割込み番号
+
+割込みハンドラ番号(inhno)と割込み番号(intno)は，割込み発生時に，IVRレ
+ジスタに設定される値を用いる．具体的には，割込みコントローラとの接続の
+順に下位ビットから，0,1,... と割り付ける．
+
+
+○カーネル管理内/外の割込み
+
+Microblaze依存部では，カーネル管理外の割込みはサポートしない．
+
+
+○割込み優先度
+
+CFG_INTに指定可能な割込み優先度としては，-1 から -7 までの値を設定可能
+である．
+
+
+○割込み属性
+
+CFG_INTでサポートしている割込み属性はない．
+
+
+○未登録の割込み
+
+未登録の割込みが発生した場合は，prc_config.c で定義されている，
+default_int_handler() を呼び出す．default_int_handler() は，発生した割
+り込みの割込み番号をコンソールに出力した後，target_exit() を呼び出す．
+
+
+○ユーザ例外
+
+ユーザ例外ハンドラは，prc_support.S で，usrexcept_entry として用意して
+いる．ディフォルトでは，単にリターンする．
+
+
+○ビットファイルへの書き込み
+
+カーネルのソースコードとデータセクションを内蔵BRAMに配置した場合は，
+FPGAのコンフィギュレーション用のビットファイル内に，カーネルを含めるこ
+とができる．ビットファイル内にカーネルを含めるためには，以下のコマンド
+を実行する．
+
+bitinit system.mhs  -pe microblaze_0 asp.elf -bt \
+           implementation/system.bit -o download_asp.bit
+
+なお，ASPカーネルの拡張子は，elfとしておく必要がある．拡張子をelfとす
+るためには，Makefile の以下の部分を書き換えればよい．
+
+#
+#  オブジェクトファイル名の拡張子の設定
+#
+OBJEXT = elf
+
+=====================================================================
+               ターゲット依存部開発者向けの情報
+=====================================================================
+
+○概要
+
+ターゲット依存部では，ペリフェラルのベースアドレスや割込み番号，キャッ
+シュ設定等を設定する必要がある．
+
+
+○コンパイルオプションとCライブラリ（Makefile.target）
+
+Microblaze にハードウェア乗算器や除算器を追加して，カーネルでこれらを
+使用するようにコンパイルするためには，コンパイルオプションを指定する必
+要がある．また，オプションに応じてリンクするCライブラリも指定する必要
+がある．これらは，ターゲット依存部の  で指定する．以下に指定のパターン
+を示す．
+
+# 追加命令なし
+COPTS   := $(COPTS) -mxl-soft-mul -mno-xl-barrel-shift -mno-xl-pattern-compare
+LIBS    := $(LIBS) -lc
+
+# 乗算器
+COPTS  := $(COPTS) -mno-xl-soft-mul -mno-xl-barrel-shift -mno-xl-pattern-compare
+LIBS   := $(LIBS) -lc_m
+
+# バレルシフタ
+COPTS   := $(COPTS) -mxl-soft-mul -mxl-barrel-shift -mno-xl-pattern-compare
+LIBS    := $(LIBS) -lc_bs
+
+#パターンマッチ
+COPTS   := $(COPTS) -mxl-soft-mul -mno-xl-barrel-shift -mxl-pattern-compare
+LIBS    := $(LIBS) -lc_p
+
+# 乗算器 + バレルシフタ
+COPTS  := $(COPTS) -mno-xl-soft-mul -mxl-barrel-shift -mno-xl-pattern-compare
+LIBS   := $(LIBS) -lc_m_bs
+
+# 乗算器 + パターンマッチ
+COPTS  := $(COPTS) -mno-xl-soft-mul -mno-xl-barrel-shift -mxl-pattern-compare
+LIBS   := $(LIBS) -lc_m_p
+
+# バレルシフタ + パターンマッチ
+COPTS  := $(COPTS) -mxl-soft-mul -mxl-barrel-shift -mxl-pattern-compare
+LIBS   := $(LIBS) -lc_bs_p
+
+# 乗算器 + バレルシフタ + パターンマッチ
+COPTS  := $(COPTS) -mno-xl-soft-mul -mxl-barrel-shift -mxl-pattern-compare
+LIBS   := $(LIBS) -lc_m_bs_p
+
+
+#
+#  除算器の有無（Cライブラリは変化なし）
+#
+# 除算器なし
+COPTS := $(COPTS) -mxl-soft-div 
+# 除算器あり
+COPTS := $(COPTS) -mno-xl-soft-div 
+
+
+○タイマ関連
+
+●ベースアドレス（target_kernel.h）
+
+#define XTIMER_BASE xxx
+
+●タイマクロック（target_timer.h）
+
+タイマ値の内部表現とミリ秒単位との変換を指定する．
+
+#define TIMER_CLOCK     xxxx
+
+●割込み関連（target_timer.h）
+
+#define INHNO_TIMER     xx           /* 割込みハンドラ番号 */
+#define INTNO_TIMER     xx           /* 割込み番号         */
+#define INTPRI_TIMER    xx           /* 割込み優先度       */
+#define INTATR_TIMER    xx           /* 割込み属性         */
+
+
+○UART関連
+
+Microblaze 依存部では，最大3ポートのUARTをサポートしている．
+
+●リンク指定（Makefile.target）
+
+XPU Uart Lite を使用する場合は，Makefile.target で，SYSSVC_COBJS に，
+xps_uartl.o を追加する．
+
+●ベースアドレス（target_kernel.h）
+
+#define XUARTL_PORT1_BASE xxx
+#define XUARTL_PORT2_BASE xxx
+#define XUARTL_PORT3_BASE xxx
+
+●割込み番号等（target_serial.h）
+
+#define INHNO_SIO_PORT1   xx   /* 割込みハンドラ番号1 */
+#define INTNO_SIO_PORT1   xx   /* 割込み番号1 */
+#define INTPRI_SIO_PORT1  xx   /* 割込み優先度1 */
+#define INTATR_SIO_PORT1  xx   /* 割込み属性1 */
+#define INHNO_SIO_PORT2   xx   /* 割込みハンドラ番号2 */
+#define INTNO_SIO_PORT2   xx   /* 割込み番号2 */
+#define INTPRI_SIO_PORT2  xx   /* 割込み優先度2 */
+#define INTATR_SIO_PORT2  xx   /* 割込み属性2 */
+#define INHNO_SIO_PORT3   xx   /* 割込みハンドラ番号3 */
+#define INTNO_SIO_PORT3   xx   /* 割込み番号3 */
+#define INTPRI_SIO_PORT3  xx   /* 割込み優先度3 */
+#define INTATR_SIO_PORT3  xx   /* 割込み属性3 */
+
+●ポート数（target_serial.h）
+
+#define TNUM_PORT         xx
+
+
+○カーネル低レベル出力用UART関連
+
+Microblaze依存部で用いる，カーネル低レベル出力用UARTの定義を行う．用い
+る UART は，通常のログ出力と同じものを使用可能である．
+
+●ベースアドレス（target_kernel.h）
+
+#define KENEL_LOW_OUT_XUARTL_BASE xxx
+
+
+○リンカスクリプト（Makefile.target）
+
+Microbalze依存部共通のリンカスクリプトを使用する場合は，
+Makefile.target で，LDSCRIPT を次のように指定する．ディフォルトのリン
+カスクリプトでは，TEXTを 0x00000000 から配置し，続いてDATAを配置する．
+
+LDSCRIPT = $(SRCDIR)/arch/microblaze_gcc/mbelf.l
+
+
+○非タスクコンテキスト用のスタックサイズの定義（target_config.h）
+
+非タスクコンテキスト用のスタックサイズを， target_config.h で定義する．
+サイズは，4Byte単位で指定する．
+
+#define DEFAULT_ISTKSZ    xxxx
+
+例えば 4KByte を指定する場合は，次のように定義する．
+
+#define DEFAULT_ISTKSZ    (0x1000U/4U)
+
+
+○sil関連（target_sil.h）
+
+微少時間待ちのための定義を target_sil.h で定義する．値の決定方法は，
+porting.txt を参照のこと．
+
+#define SIL_DLY_TIM1    xxx
+#define SIL_DLY_TIM2    xxx
+
+
+○MSRの初期値（target_kernel.h）
+
+MSRの初期値を target_kernel.h で定義する．設定内容としては，I/Dキャッ
+シュのON/OFFを想定している．
+
+
+○ベクタコピー
+
+Microblazeの割り込みや例外のベクタは0番地からとなっているが，環境によ
+っては，カーネルのベクタ番地を直接0番地に配置できない場合ある．その場
+合は，マクロ VECTOR_COPY を定義することにより，スタートアップルーチン
+で，カーネルのベクタを 0番地からコピーすることができる．
+
+○データセクションの初期化
+
+データセクションのLMAとVMAを別のアドレスとして，ROM化をしない場合には，
+ターゲット依存部で，OMIT_DATA_IN_ROM を定義する．定義することで，スタ
+ートアップルーチンは，データセクションのROMからRAMへのコピーを行わない．
+
+#define MSR_INIT_VAL xxx
+
+
+=====================================================================
+                             変更履歴
+=====================================================================
+2010/10/11
+・(toppers-users 3254)で指摘された，エッジ割込みとレベル割込みで割込み
+  のクリアのタイミングを変更．
+
+2010/04/05
+・TOPPERS_ISTKPT で，int型のポインタでスタック領域を確保していた問題を
+  修正．char_t型のポインタへ修正．
+
+・(toppers-users 3123)で指摘された，dispatcher_2:のアイドルループを抜
+  ける際に，割込みを禁止していない問題を修正．
+
+以上．

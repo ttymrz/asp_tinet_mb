@@ -1,0 +1,21 @@
+# prc_config.c
+idf
+iipm
+inh_tbl
+iipm_mask_tbl
+inh_iipm_tbl
+bitpat_cfgint
+x_config_int
+exch_tbl
+intatr_tbl
+
+prc_initialize
+prc_terminate
+default_int_handler
+default_exc_handler
+
+# prc_support.S
+
+usrexcept_entry
+hwexcept_entry
+interrupt_entry

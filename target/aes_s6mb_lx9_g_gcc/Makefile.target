@@ -1,0 +1,124 @@
+#
+# $Id: Makefile.target 5 2012-01-14 09:35:55Z tetsuya $
+# 
+
+#
+#		Makefile のターゲット依存部（AES-S6MB-LX9-G用）
+#
+
+#
+#  ボード名の定義
+#
+BOARD = aes_s6mb_lx9_g
+PRC   = microblaze
+TOOL  = gcc
+
+#
+#  コンパイルオプション
+#
+INCLUDES := $(INCLUDES) -I$(TARGETDIR)
+COPTS := $(COPTS) -mcpu=v8.20.a -mlittle-endian
+LDFLAGS := $(LDFLAGS)
+
+#
+#  サポート命令毎のコンパイルオプション
+#
+# ノーマル
+#COPTS   := $(COPTS) -mxl-soft-mul -mno-xl-barrel-shift -mno-xl-pattern-compare
+
+# 乗算器
+#COPTS  := $(COPTS) -mno-xl-soft-mul -mno-xl-barrel-shift -mno-xl-pattern-compare
+
+# バレルシフタ
+#COPTS   := $(COPTS) -mxl-soft-mul -mxl-barrel-shift -mno-xl-pattern-compare
+
+#パターンマッチ
+#COPTS   := $(COPTS) -mxl-soft-mul -mno-xl-barrel-shift -mxl-pattern-compare
+
+# 乗算器 + バレルシフタ
+#COPTS  := $(COPTS) -mno-xl-soft-mul -mxl-barrel-shift -mno-xl-pattern-compare
+
+# 乗算器 + パターンマッチ
+#COPTS  := $(COPTS) -mno-xl-soft-mul -mno-xl-barrel-shift -mxl-pattern-compare
+
+# バレルシフタ + パターンマッチ
+#COPTS  := $(COPTS) -mxl-soft-mul -mxl-barrel-shift -mxl-pattern-compare
+
+# 乗算器 + バレルシフタ + パターンマッチ
+COPTS  := $(COPTS) -mno-xl-soft-mul -mxl-barrel-shift -mxl-pattern-compare
+
+
+#
+#  除算器の有無（Cライブラリは変化なし）
+#
+# 除算器なし
+#COPTS := $(COPTS) -mxl-soft-div 
+# 除算器あり
+COPTS := $(COPTS) -mno-xl-soft-div 
+
+
+#
+#  カーネルに関する定義
+#
+KERNEL_DIR := $(KERNEL_DIR) $(TARGETDIR)
+KERNEL_ASMOBJS := $(KERNEL_ASMOBJS)
+KERNEL_COBJS := $(KERNEL_COBJS) target_config.o
+
+#
+#  システムサービスに関する定義
+#
+SYSSVC_DIR := $(SYSSVC_DIR) $(TARGETDIR)
+SYSSVC_COBJS := $(SYSSVC_COBJS) xps_uartl.o
+
+#
+#  トレースログ記録のサンプルコードに関する定義
+#
+ifeq ($(ENABLE_TRACE),true)
+      COPTS := $(COPTS) -DTOPPERS_ENABLE_TRACE
+      KERNEL_DIR := $(KERNEL_DIR) $(SRCDIR)/arch/logtrace
+      KERNEL_COBJS := $(KERNEL_COBJS) trace_config.o trace_dump.o
+endif
+
+#
+#  各セグメントの開始アドレスの定義
+#
+#TEXT_START_ADDRESS = 0x8C003000
+#DATA_START_ADDRESS = 0x8C100000
+
+#
+#  リンカスクリプトの定義
+#
+LDSCRIPT = $(TARGETDIR)/aes_s6mb_lx9_g.ld
+
+#
+#  スタートアップモジュールに関する定義
+#
+#  shlelf.ldに「STARTUP(start.o)」を記述したため，スタートアップモジュー
+#  ルの名前をHIDDEN_OBJSに定義する．また，LDFLAGSに-nostdlibを追加している．
+#
+HIDDEN_OBJS = start.o
+
+$(HIDDEN_OBJS): %.o: %.S
+	$(CC) -c $(CFLAGS) $(KERNEL_CFLAGS) $<
+
+$(HIDDEN_OBJS:.o=.d): %.d: %.S
+	@$(PERL) $(SRCDIR)/utils/makedep -C $(CC) \
+		-O "$(CFLAGS) $(KERNEL_CFLAGS)" $< >> Makefile.depend
+
+LDFLAGS := -nostdlib $(LDFLAGS)
+
+#
+#  依存関係の定義
+#
+kernel_cfg.timestamp: $(TARGETDIR)/target.tf
+$(OBJFILE): $(TARGETDIR)/target_check.tf
+
+# 
+#  オフセットファイル生成のための定義 
+# 
+OFFSET_TF := $(TARGETDIR)/target_offset.tf
+
+#
+#  プロセッサ依存部のインクルード
+#
+include $(SRCDIR)/arch/microblaze_gcc/Makefile.prc
