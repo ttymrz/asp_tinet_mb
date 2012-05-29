@@ -739,9 +739,9 @@ void emaclite_start (T_IF_SOFTC *ic, T_NET_BUF *output)
 }
 
 /*
- *  EMACLITE Interrupt Handler
+ *  EMACLITE Interrupt Service Routine
  */
-void if_emaclite_handler (void)
+void if_emaclite_isr (intptr_t extinf)
 {
     T_EMACLITE_SOFTC *sc;
     T_EMACLITE_BLOCK *eb;

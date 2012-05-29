@@ -90,7 +90,7 @@ extern void emaclite_init(T_IF_SOFTC *ic);
 extern void emaclite_reset(T_IF_SOFTC *ic);
 extern T_NET_BUF *emaclite_read(T_IF_SOFTC *ic);
 extern void emaclite_start(T_IF_SOFTC *ic, T_NET_BUF *output);
-extern void if_emaclite_handler(void);
+extern void if_emaclite_isr(intptr_t);
 
 #endif /* #if !defined(TOPPERS_MACRO_ONLY) && !defined(_MACRO_ONLY) */
 

@@ -204,7 +204,7 @@
 #define INHNO_IF_EMACLITE       1U      /* interrupt handler    */
 #define INTNO_IF_EMACLITE       1U      /* interrupt number     */
 #define INTPRI_IF_EMACLITE      (-3)    /* 割込み優先度         */
-#define INTATR_IF_EMACLITE      0U      /* 割込み属性           */
+#define INTATR_IF_EMACLITE      TA_EDGE /* 割込み属性           */
 
 /*
  *  ARP に関する定義

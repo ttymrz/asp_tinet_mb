@@ -47,7 +47,7 @@
 #define emaclite_read           _tinet_emaclite_read
 #define emaclite_reset          _tinet_emaclite_reset
 #define emaclite_start          _tinet_emaclite_start
-#define if_emaclite_handler     _tinet_if_emaclite_handler
+#define if_emaclite_isr         _tinet_if_emaclite_isr
 #define if_softc                _tinet_if_softc
 
 #ifdef SUPPORT_INET6
