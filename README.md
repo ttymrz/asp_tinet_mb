@@ -8,9 +8,13 @@ Based on:
  * asp-1.7.0
  * TINET 1.5.2
 
+The [TOPPERS/ASP] is a real-time kernel based on [uITRON][ITRON] 4.0 specification.
+The [TINET] is a compact TCP/IP protocol stack based on the [ITRON] TCP/IP API specification.
+
+
 [TOPPERS/ASP]: http://www.toppers.jp/en/index.html
 [TINET]: http://www.toppers.jp/en/tinet.html
-
+[ITRON]: http://www.t-engine.org/
 
 Target Board
 -----
