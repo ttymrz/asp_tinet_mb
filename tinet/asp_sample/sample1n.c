@@ -433,7 +433,7 @@ put_ipv4addr (ID cepid, ULONGEST *addr, int_t width)
 {
 	int_t len = 3;	/* 3 は '.' の文字数 */
 
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 
 	len += put_num(cepid, (*addr >> 24) & 0xff, 10, radhex, 0, false, ' '); 
 	put_char(cepid, '.');
@@ -443,7 +443,7 @@ put_ipv4addr (ID cepid, ULONGEST *addr, int_t width)
 	put_char(cepid, '.');
 	len += put_num(cepid,  *addr        & 0xff, 10, radhex, 0, false, ' '); 
 
-#else	/* of #if SIL_ENDIAN == SIL_ENDIAN_BIG */
+#else	/* of #if defined(SIL_ENDIAN_BIG) */
 
 	len += put_num(cepid,  *addr        & 0xff, 10, radhex, 0, false, ' '); 
 	put_char(cepid, '.');
@@ -453,7 +453,7 @@ put_ipv4addr (ID cepid, ULONGEST *addr, int_t width)
 	put_char(cepid, '.');
 	len += put_num(cepid, (*addr >> 24) & 0xff, 10, radhex, 0, false, ' '); 
 
-#endif	/* of #if SIL_ENDIAN == SIL_ENDIAN_BIG */
+#endif	/* of #if defined(SIL_ENDIAN_BIG) */
 
 	for ( ; len < width; len ++)
 		put_char(cepid, ' ');

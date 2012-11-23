@@ -232,23 +232,19 @@ typedef struct t_ip6_frag_hdr {
 
 /* 断片ヘッダのオフセットとフラグ */
 
-#ifdef SIL_ENDIAN
-
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 
 #define IP6F_OFF_MASK		UINT_C(0xfff8)		/* オフセットを取出すマスク	*/
 #define IP6F_RESERVED_MASK	UINT_C(0x0006)		/* 予約を取出すマスク		*/
 #define IP6F_MORE_FRAG		UINT_C(0x0001)		/* 中間フラグメント		*/
 
-#elif SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#elif defined(SIL_ENDIAN_LITTLE)
 
 #define IP6F_OFF_MASK		UINT_C(0xf8ff)		/* オフセットを取出すマスク	*/
 #define IP6F_RESERVED_MASK	UINT_C(0x0600)		/* 予約を取出すマスク		*/
 #define IP6F_MORE_FRAG		UINT_C(0x0100)		/* 中間フラグメント		*/
 
-#endif	/* #if SIL_ENDIAN == SIL_ENDIAN_BIG */
-
-#endif	/* of #ifdef SIL_ENDIAN */
+#endif	/* #if defined(SIL_ENDIAN_BIG) */
 
 /*
  *  制限値

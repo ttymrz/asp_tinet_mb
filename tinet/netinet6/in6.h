@@ -152,9 +152,7 @@ typedef struct t_in6_addr T_IN6_ADDR;
  *  アドレスの定義
  */
 
-#ifdef SIL_ENDIAN
-
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 
 #define IPV6_ADDR_INT32_ONE		ULONG_C(0x00000001)
 #define IPV6_ADDR_INT32_TWO		ULONG_C(0x00000002)
@@ -166,7 +164,7 @@ typedef struct t_in6_addr T_IN6_ADDR;
 #define IPV6_ADDR_INT16_USL		UINT_C(0xfec0)
 #define IPV6_ADDR_INT16_MLL		UINT_C(0xff02)
 
-#elif SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#elif defined(SIL_ENDIAN_LITTLE)
 
 #define IPV6_ADDR_INT32_ONE		ULONG_C(0x01000000)
 #define IPV6_ADDR_INT32_TWO		ULONG_C(0x02000000)
@@ -178,9 +176,7 @@ typedef struct t_in6_addr T_IN6_ADDR;
 #define IPV6_ADDR_INT16_USL		UINT_C(0xc0fe)
 #define IPV6_ADDR_INT16_MLL		UINT_C(0x02ff)
 
-#endif	/* #if SIL_ENDIAN == SIL_ENDIAN_BIG */
-
-#endif	/* of #ifdef SIL_ENDIAN */
+#endif	/* #if defined(SIL_ENDIAN_BIG) */
 
 /*
  *  特別なアドレスのチェック

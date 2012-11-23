@@ -535,11 +535,11 @@ in_cksum_sum (void *data, uint_t len /*オクテット単位*/)
 		data = (uint8_t*)data + 2;
 		}
 
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 	return sum;
-#elif SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#elif defined(SIL_ENDIAN_LITTLE)
 	return ((sum >> 8) & 0xffff) + ((sum & 0xff) << 8) + ((sum >> 24) & 0xff);
-#endif	/* #if SIL_ENDIAN == SIL_ENDIAN_BIG */
+#endif	/* #if defined(SIL_ENDIAN_BIG) */
 
 	}
 

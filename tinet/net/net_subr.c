@@ -182,7 +182,7 @@ mac2str (char *buf, uint8_t *macaddr)
 
 #endif	/* of #ifdef SUPPORT_ETHER */
 
-#if SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#if defined(SIL_ENDIAN_LITTLE)
 
 /*
  *  rev_memcpy_word -- 反転メモリコピー（4 バイト）
@@ -220,4 +220,4 @@ rev_memcmp_word (uint8_t *data1, uint8_t *data2)
 	return 0;
 	}
 
-#endif	/* of #if SIL_ENDIAN == SIL_ENDIAN_LITTLE */
+#endif	/* of #if defined(SIL_ENDIAN_LITTLE) */

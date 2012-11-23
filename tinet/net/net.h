@@ -71,33 +71,7 @@
  *  バイトオーダ変換の定義
  */
 
-#ifdef TARGET_KERNEL_ASP
-
 #if defined(SIL_ENDIAN_BIG)
-
-#undef  SIL_ENDIAN_BIG
-#define SIL_ENDIAN_LITTLE	0
-#define SIL_ENDIAN_BIG		1
-#define SIL_ENDIAN		SIL_ENDIAN_BIG
-
-#elif defined(SIL_ENDIAN_LITTLE)
-
-#undef  SIL_ENDIAN_LITTLE
-#define SIL_ENDIAN_LITTLE	0
-#define SIL_ENDIAN_BIG		1
-#define SIL_ENDIAN		SIL_ENDIAN_LITTLE
-
-#endif	/* of #if defined(SIL_ENDIAN_BIG) */
-
-#endif	/* of #ifdef TARGET_KERNEL_ASP */
-
-#if !defined(SIL_ENDIAN)
-
-#error "SIL_ENDIAN expected."
-
-#else	/* of #if !defined(SIL_ENDIAN) */
-
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
 
 #define ntohs(n)		((uint16_t)n)
 #define htons(h)		((uint16_t)h)
@@ -121,7 +95,7 @@
 
 #define nahcmpl(n,h)		memcmp((n),(uint8_t*)&(h),4)
 
-#elif SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#elif defined(SIL_ENDIAN_LITTLE)
 
 #ifndef NET_REV_ENDIAN_HWORD
 
@@ -164,9 +138,7 @@ extern int  rev_memcmp_word (uint8_t *data1, uint8_t *data2);
 #define ahtonl(n,h)		rev_memcpy_word((n),(uint8_t*)&(h))
 #define nahcmpl(n,h)		rev_memcmp_word((n),(uint8_t*)&(h))
 
-#endif	/* #if SIL_ENDIAN == SIL_ENDIAN_BIG */
-
-#endif	/* of #if !defined(SIL_ENDIAN) */
+#endif	/* #if defined(SIL_ENDIAN_BIG) */
 
 /*
  *  プロトコルを識別するフラグに関する定義

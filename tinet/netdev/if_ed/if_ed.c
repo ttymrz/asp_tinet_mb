@@ -764,11 +764,11 @@ ed_read (T_IF_SOFTC *ic)
 		/* 受信フレームヘッダ構造体を取り出す。*/
 		ed_pio_readmem(sc, frame_ptr, (char *)&frame_hdr, sizeof(frame_hdr));
 
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 
 		frame_hdr.count = (frame_hdr.count << 8) | (frame_hdr.count >> 8);
 
-#endif	/* of #if SIL_ENDIAN == SIL_ENDIAN_BIG */
+#endif	/* of #if defined(SIL_ENDIAN_BIG) */
 
 		len = frame_hdr.count;
 		if (len >  sizeof(T_ED_FRAME_HDR) &&

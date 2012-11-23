@@ -268,19 +268,19 @@ typedef struct t_neighbor_advert_hdr {
  *  近隣通知フラグ、nd_na_flags_reserved (hdr.data32) に設定する。
  */
 
-#if SIL_ENDIAN == SIL_ENDIAN_BIG
+#if defined(SIL_ENDIAN_BIG)
 
 #define ND_NA_FLG_OVERRIDE		ULONG_C(0x20000000)	/* 近隣キャッシュ上書き	*/
 #define ND_NA_FLG_SOLICITED		ULONG_C(0x40000000)	/* 近隣要請への応答	*/
 #define ND_NA_FLG_ROUTER		ULONG_C(0x80000000)	/* ルータ通知		*/
 
-#elif SIL_ENDIAN == SIL_ENDIAN_LITTLE
+#elif defined(SIL_ENDIAN_LITTLE)
 
 #define ND_NA_FLG_OVERRIDE		ULONG_C(0x00000020)	/* 近隣キャッシュ上書き	*/
 #define ND_NA_FLG_SOLICITED		ULONG_C(0x00000040)	/* 近隣要請への応答	*/
 #define ND_NA_FLG_ROUTER		ULONG_C(0x00000080)	/* ルータ通知		*/
 
-#endif	/* #if SIL_ENDIAN == SIL_ENDIAN_BIG */
+#endif	/* #if defined(SIL_ENDIAN_BIG) */
 
 /*
  *  ルータ通知
