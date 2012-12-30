@@ -72,7 +72,6 @@ typedef struct t_if_softc T_IF_SOFTC;
 #ifndef T_NET_BUF_DEFINED
 
 typedef struct t_net_buf T_NET_BUF;
-//typedef struct t_net_buf_if_pdu T_NET_BUF;
 
 #define T_NET_BUF_DEFINED
 
@@ -81,7 +80,6 @@ typedef struct t_net_buf T_NET_BUF;
 /*
  *  ´Ø¿ô
  */
-
 extern ER emaclite_addmulti(T_IF_SOFTC *ic);
 extern T_IF_SOFTC *emaclite_get_softc(void);
 extern void emaclite_watchdog(T_IF_SOFTC *ic);

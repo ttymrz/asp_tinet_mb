@@ -109,12 +109,12 @@
 
 
 /**
- * emaclite default mac address
+ * emaclite default ethernet address
  */
 /* EMACLITE default */
-// static const uint8_t ethernet_mac_addr[] = {0x00, 0x00, 0x5E, 0x00, 0xFA, 0xCE};
+// const uint8_t ethernet_addr[] = {0x00, 0x00, 0x5E, 0x00, 0xFA, 0xCE};
 /* Xilinx default */
-static const uint8_t ethernet_mac_addr[] = {0x00, 0x0A, 0x35, 0x00, 0x01, 0x02};
+const uint8_t ethernet_addr[] = {0x00, 0x0A, 0x35, 0x00, 0x01, 0x02};
 
 /*
  *  ネットワークインタフェースに依存するソフトウェア情報 
@@ -549,10 +549,10 @@ void emaclite_probe (T_IF_SOFTC *ic)
 
     for(ix = 0; ix < ETHER_ADDR_LEN; ix++)
     {
-        ic->ifaddr.lladdr[ix] = ethernet_mac_addr[ix];
+        ic->ifaddr.lladdr[ix] = ethernet_addr[ix];
     }
 
-    emaclite_alignedwrite((void*)ethernet_mac_addr, eb->tx_buffer, ETHER_ADDR_LEN);
+    emaclite_alignedwrite((void*)ethernet_addr, eb->tx_buffer, ETHER_ADDR_LEN);
 
     sil_wrw_mem(eb->tx_length, ETHER_ADDR_LEN);
     sil_wrw_mem(eb->tx_control, EMACLITE_TX_PROGRAM | EMACLITE_TX_STATUS);
