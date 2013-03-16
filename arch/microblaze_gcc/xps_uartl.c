@@ -316,7 +316,7 @@ sio_isr(intptr_t extinf)
  *  シリアルI/Oポートへの文字送信
  */
 bool_t
-sio_snd_chr(SIOPCB *siopcb, char_t c)
+sio_snd_chr(SIOPCB *siopcb, char c)
 {
 	if (uart_putready(siopcb)) {
 		uart_putchar(siopcb, c);

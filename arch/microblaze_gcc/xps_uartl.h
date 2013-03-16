@@ -83,7 +83,7 @@ extern void sio_isr(intptr_t exinf);
 /*
  *  シリアルI/Oポートへの文字送信
  */
-extern bool_t sio_snd_chr(SIOPCB *siopcb, char_t c);
+extern bool_t sio_snd_chr(SIOPCB *siopcb, char c);
 
 /*
  *  シリアルI/Oポートからの文字受信

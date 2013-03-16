@@ -65,7 +65,7 @@
  *
  *  ターゲット依存の方法で，文字cを表示/出力/保存する．
  */
-extern void	target_fput_log(char_t c);
+extern void	target_fput_log(char c);
 
 /*
  *  シリアルポート数の定義

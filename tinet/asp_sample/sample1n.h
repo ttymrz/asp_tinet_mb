@@ -61,7 +61,7 @@ extern uint8_t tcp_rwbuf[];
 /*  ネットワーク対応化関数  */
 
 extern ER	net_syslog(uint_t prio, const char *format, ...) throw();
-extern ER_UINT	net_serial_rea_dat(ID portid, char_t *buf, uint_t len) throw();
+extern ER_UINT	net_serial_rea_dat(ID portid, char *buf, uint_t len) throw();
 extern ER	net_serial_ctl_por(ID portid, uint_t ioctl) throw();
 
 /*  ノンブロッキングコールのコールバック関数  */

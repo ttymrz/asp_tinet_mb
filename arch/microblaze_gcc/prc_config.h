@@ -92,7 +92,7 @@
 /*
  *  非タスクコンテキスト用のスタック開始アドレス設定マクロ
  */
-#define TOPPERS_ISTKPT(istk, istksz) ((STK_T *)((char_t *)(istk) + (istksz)))
+#define TOPPERS_ISTKPT(istk, istksz) ((STK_T *)((char *)(istk) + (istksz)))
 
 /*
  *  タスクコンテキストブロックの定義
@@ -566,7 +566,7 @@ extern void    start_r(void);
 
 #define activate_context(p_tcb)                                         \
 {                                                                       \
-    (p_tcb)->tskctxb.sp = (void *)((char_t *)((p_tcb)->p_tinib->stk)    \
+    (p_tcb)->tskctxb.sp = (void *)((char *)((p_tcb)->p_tinib->stk)      \
                                         + (p_tcb)->p_tinib->stksz);     \
     (p_tcb)->tskctxb.pc = (FP)start_r;                                  \
 }

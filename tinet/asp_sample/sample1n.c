@@ -298,7 +298,7 @@ get_char (ID cepid)
  */
 
 ER_UINT
-net_serial_rea_dat (ID portid, char_t *buf, uint_t len)
+net_serial_rea_dat (ID portid, char *buf, uint_t len)
 {
 	T_SERIAL_RPOR	rpor;
 	uint_t		off;

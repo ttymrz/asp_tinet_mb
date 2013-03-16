@@ -233,7 +233,7 @@ microbalze_xuartl_init(void)
  *  カーネルの低レベル出力用関数(XPS UART Lite版)
  */
 Inline void
-microbalze_xuartl_putc(char_t c)
+microbalze_xuartl_putc(char c)
 {
 	while((sil_rew_mem((void*)(KENEL_LOW_OUT_XUARTL_BASE + XUARTL_STAT_OFFSET)) & XUARTL_STAT_TX_FULL_BIT) == XUARTL_STAT_TX_FULL_BIT);
 	sil_wrw_mem((void*)(KENEL_LOW_OUT_XUARTL_BASE + XUARTL_TX_OFFSET), c);

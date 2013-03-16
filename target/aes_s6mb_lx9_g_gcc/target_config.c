@@ -80,7 +80,7 @@ target_exit(void)
  *  ターゲット依存の文字出力
  */
 void
-target_fput_log(char_t c)
+target_fput_log(char c)
 {
 	if (c == '\n') {
 		microbalze_xuartl_putc('\r');
