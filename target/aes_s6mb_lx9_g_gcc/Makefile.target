@@ -106,6 +106,7 @@ $(HIDDEN_OBJS:.o=.d): %.d: %.S
 		-O "$(CFLAGS) $(KERNEL_CFLAGS)" $< >> Makefile.depend
 
 LDFLAGS := -nostdlib $(LDFLAGS)
+CFG1_OUT_LDFLAGS := -nostdlib $(CFG1_OUT_LDFLAGS)
 
 #
 #  依存関係の定義
