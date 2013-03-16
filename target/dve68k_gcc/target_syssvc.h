@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: target_syssvc.h 799 2008-03-16 14:11:12Z hiro $
+ *  @(#) $Id: target_syssvc.h 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -73,7 +73,7 @@
  *
  *  ターゲット依存の方法で，文字cを表示/出力/保存する．
  */
-extern void	target_fput_log(char_t c);
+extern void	target_fput_log(char c);
 
 /*
  *  シリアルポート数の定義

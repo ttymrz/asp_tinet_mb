@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: semaphore.c 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: semaphore.c 2415 2012-09-06 03:13:06Z ertl-hiro $
  */
 
 /*
@@ -154,13 +154,15 @@ initialize_semaphore(void)
 	SEMCB	*p_semcb;
 	SEMINIB	*p_seminib;
 
-	for (p_semcb = semcb_table, i = 0; i < tnum_ssem; p_semcb++, i++) {
+	for (i = 0; i < tnum_ssem; i++) {
+		p_semcb = &(semcb_table[i]);
 		queue_initialize(&(p_semcb->wait_queue));
 		p_semcb->p_seminib = &(seminib_table[i]);
 		p_semcb->semcnt = p_semcb->p_seminib->isemcnt;
 	}
 	queue_initialize(&free_semcb);
-	for (j = 0; i < tnum_sem; p_semcb++, i++, j++) {
+	for (j = 0; i < tnum_sem; i++, j++) {
+		p_semcb = &(semcb_table[i]);
 		p_seminib = &(aseminib_table[j]);
 		p_seminib->sematr = TA_NOEXS;
 		p_semcb->p_seminib = ((const SEMINIB *) p_seminib);
@@ -189,7 +191,7 @@ acre_sem(const T_CSEM *pk_csem)
 	CHECK_PAR(1 <= pk_csem->maxsem && pk_csem->maxsem <= TMAX_MAXSEM);
 
 	t_lock_cpu();
-	if (queue_empty(&free_semcb)) {
+	if (tnum_sem == 0 || queue_empty(&free_semcb)) {
 		ercd = E_NOID;
 	}
 	else {

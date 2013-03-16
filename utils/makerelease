@@ -3,7 +3,7 @@
 #  TOPPERS Software
 #      Toyohashi Open Platform for Embedded Real-Time Systems
 # 
-#  Copyright (C) 2006-2010 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2006-2011 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +35,7 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: makerelease 1866 2010-07-25 13:19:17Z ertl-hiro $
+#  @(#) $Id: makerelease 2253 2011-09-11 01:23:40Z ertl-hiro $
 # 
 
 require 'getcwd.pl';
@@ -77,7 +77,7 @@ sub read_file {
 		$dirname = "";
 	}
 
-	open($fh, $filename) || die "Cannot open $infile";
+	open($fh, $filename) || die "Cannot open $filename";
 	while ($line = <$fh>) {
 		chomp $line;
 		$line =~ s/\r$//;
@@ -120,7 +120,7 @@ sub read_file {
 			}
 		}
 		elsif ($line =~ /^INCLUDE[ \t]+(.*)$/) {
-			do read_file(do gen_path($dirname, $1));
+			read_file(gen_path($dirname, $1));
 		}
 		else {
 			$filename = $prefix."/".$dirname.$line;
@@ -137,7 +137,7 @@ sub read_file {
 	close($fh);
 }
 
-do read_file($arg1);
+read_file($arg1);
 unless ($package) {
 	die "PACKAGE/E_PACKAGE directive not found.";
 }

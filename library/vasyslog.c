@@ -4,7 +4,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -36,7 +36,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: vasyslog.c 755 2008-03-07 17:42:37Z hiro $
+ *  @(#) $Id: vasyslog.c 2422 2012-11-11 07:26:42Z ertl-hiro $
  */
 
 /*
@@ -47,17 +47,19 @@
 #include <t_syslog.h>
 #include <stdarg.h>
 
+#ifndef TOPPERS_OMIT_SYSLOG
+
 void
 syslog(uint_t prio, const char *format, ...)
 {
-	SYSLOG	syslog;
+	SYSLOG	logbuf;
 	va_list	ap;
 	uint_t	i;
 	char	c;
 	bool_t	lflag;
 
-	syslog.logtype = LOG_TYPE_COMMENT;
-	syslog.loginfo[0] = (intptr_t) format;
+	logbuf.logtype = LOG_TYPE_COMMENT;
+	logbuf.loginfo[0] = (intptr_t) format;
 	i = 1U;
 	va_start(ap, format);
 
@@ -77,23 +79,23 @@ syslog(uint_t prio, const char *format, ...)
 		}
 		switch (c) {
 		case 'd':
-			syslog.loginfo[i++] = lflag ? (intptr_t) va_arg(ap, long_t)
+			logbuf.loginfo[i++] = lflag ? (intptr_t) va_arg(ap, long_t)
 										: (intptr_t) va_arg(ap, int_t);
 			break;
 		case 'u':
 		case 'x':
 		case 'X':
-			syslog.loginfo[i++] = lflag ? (intptr_t) va_arg(ap, ulong_t)
+			logbuf.loginfo[i++] = lflag ? (intptr_t) va_arg(ap, ulong_t)
 										: (intptr_t) va_arg(ap, uint_t);
 			break;
 		case 'p':
-			syslog.loginfo[i++] = (intptr_t) va_arg(ap, void *);
+			logbuf.loginfo[i++] = (intptr_t) va_arg(ap, void *);
 			break;
 		case 'c':
-			syslog.loginfo[i++] = (intptr_t) va_arg(ap, int);
+			logbuf.loginfo[i++] = (intptr_t) va_arg(ap, int);
 			break;
 		case 's':
-			syslog.loginfo[i++] = (intptr_t) va_arg(ap, const char *);
+			logbuf.loginfo[i++] = (intptr_t) va_arg(ap, const char *);
 			break;
 		case '\0':
 			format--;
@@ -103,5 +105,7 @@ syslog(uint_t prio, const char *format, ...)
 		}
 	}
 	va_end(ap);
-	(void) syslog_wri_log(prio, &syslog);
+	(void) syslog_wri_log(prio, &logbuf);
 }
+
+#endif /* TOPPERS_OMIT_SYSLOG */

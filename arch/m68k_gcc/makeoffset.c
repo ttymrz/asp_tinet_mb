@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: makeoffset.c 2048 2011-04-03 02:36:03Z ertl-hiro $
+ *  @(#) $Id: makeoffset.c 2395 2012-08-06 02:45:37Z ertl-hiro $
  */
 
 #include "kernel_impl.h"
@@ -98,8 +98,8 @@ TCB	BIT_BB_TCB_enatex = {
 #ifdef TOPPERS_SUPPORT_MUTEX
 	{ NULL, NULL },			/* mutex_queue */
 #endif /* TOPPERS_SUPPORT_MUTEX */
-#ifdef TOPPERS_SUPPORT_OVRTIM
+#ifdef TOPPERS_SUPPORT_OVRHDR
 	0U,						/* leftotm */
-#endif /* TOPPERS_SUPPORT_OVRTIM */
+#endif /* TOPPERS_SUPPORT_OVRHDR */
 	{ NULL, NULL }			/* tskctxb */
 };

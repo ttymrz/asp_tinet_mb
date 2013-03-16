@@ -2,7 +2,7 @@
  *  TOPPERS Software
  *      Toyohashi Open Platform for Embedded Real-Time Systems
  * 
- *  Copyright (C) 2006-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2006-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -34,7 +34,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: test_tex1.c 2007 2010-12-31 05:48:15Z ertl-hiro $
+ *  @(#) $Id: test_tex1.c 2419 2012-11-11 06:31:18Z ertl-hiro $
  */
 
 /* 
@@ -74,6 +74,8 @@
  *			  に実行開始
  *		(G-2) タスク例外処理要求がない
  *		(G-3) タスク例外処理要求があるが，タスク例外処理禁止
+ *		(G-4) タスク例外処理要求があるが，割込み優先度マスクが全解除で
+ *			  ない
  *	(H) タスクディスパッチャによる起動
  *		(H-1) ディスパッチ後のタスクがタスク例外許可でタスク例外処理要
  *			  求あり
@@ -126,13 +128,14 @@
  *		loc_cpu()
  *		リターン							... (I)
  *	== TASK1タスク例外処理ルーチン（3回目）==
- *	13:	初期状態のチェック
+ *	13:	初期状態のチェック					... (J-2)
  *	14:	ena_dsp() ... ディスパッチ許可，タスク例外許可
  *		chg_ipm(TMAX_INTPRI)
  *		ena_tex()
  *		chg_ipm(TIPM_ENAALL)				... (G-2)
  *		chg_ipm(TMAX_INTPRI)
  *	15: ras_tex(TSK_SELF, 0x0004)			... (E-4)
+ *		chg_ipm(TMAX_INTPRI)				... (G-4)
  *		dis_tex()
  *		chg_ipm(TIPM_ENAALL)				... (G-3)
  *		chg_ipm(TMAX_INTPRI)
@@ -145,7 +148,7 @@
  *		loc_cpu()
  *		リターン
  *	== TASK1タスク例外処理ルーチン（3回目続き）==
- *	19:	戻ってきた状態のチェック			... (J-2)
+ *	19:	戻ってきた状態のチェック
  *		リターン
  *	== TASK1（続き）==
  *	20:	戻ってきた状態のチェック			... (J-1)

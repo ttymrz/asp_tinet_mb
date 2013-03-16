@@ -3,7 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems/
  *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +35,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: task_refer.c 1016 2008-05-10 08:42:16Z ertl-hiro $
+ *  $Id: task_refer.c 2371 2012-05-06 10:40:31Z ertl-hiro $
  */
 
 /*
@@ -51,6 +51,7 @@
 #include "dataqueue.h"
 #include "pridataq.h"
 #include "mailbox.h"
+#include "mutex.h"
 #include "mempfix.h"
 #include "time_event.h"
 
@@ -163,6 +164,11 @@ ref_tsk(ID tskid, T_RTSK *pk_rtsk)
 				pk_rtsk->tskwait = TTW_MBX;
 				pk_rtsk->wobjid = MBXID(((WINFO_MBX *)(p_tcb->p_winfo))
 																->p_mbxcb);
+				break;
+			case TS_WAIT_MTX:
+				pk_rtsk->tskwait = TTW_MTX;
+				pk_rtsk->wobjid = MTXID(((WINFO_MTX *)(p_tcb->p_winfo))
+																->p_mtxcb);
 				break;
 			case TS_WAIT_MPF:
 				pk_rtsk->tskwait = TTW_MPF;

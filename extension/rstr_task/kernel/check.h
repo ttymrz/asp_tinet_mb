@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: check.h 1965 2010-11-20 07:22:43Z ertl-hiro $
+ *  $Id: check.h 2366 2012-05-06 09:22:22Z ertl-hiro $
  */
 
 /*
@@ -60,66 +60,66 @@
 /*
  *  タスク優先度のチェック（E_PAR）
  */
-#define CHECK_TPRI(tpri) {									\
+#define CHECK_TPRI(tpri) do {								\
 	if (!VALID_TPRI(tpri)) {								\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_TPRI_INI(tpri) {								\
+#define CHECK_TPRI_INI(tpri) do {							\
 	if (!(VALID_TPRI(tpri) || (tpri) == TPRI_INI)) {		\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_TPRI_SELF(tpri) {								\
+#define CHECK_TPRI_SELF(tpri) do {							\
 	if (!(VALID_TPRI(tpri) || (tpri) == TPRI_SELF)) {		\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  タイムアウト指定値のチェック（E_PAR）
  */
-#define CHECK_TMOUT(tmout) {								\
+#define CHECK_TMOUT(tmout) do {								\
 	if (!(TMO_FEVR <= (tmout))) {							\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  割込み優先度のチェック（E_PAR）
  */
-#define CHECK_INTPRI_CHGIPM(intpri) {						\
+#define CHECK_INTPRI_CHGIPM(intpri) do {					\
 	if (!VALID_INTPRI_CHGIPM(intpri)) {						\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  割込み番号のチェック（E_PAR）
  */
-#define CHECK_INTNO_DISINT(intno) {							\
+#define CHECK_INTNO_DISINT(intno) do {						\
 	if (!VALID_INTNO_DISINT(intno)) {						\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  その他のパラメータエラーのチェック（E_PAR）
  */
-#define CHECK_PAR(exp) {									\
+#define CHECK_PAR(exp) do {									\
 	if (!(exp)) {											\
 		ercd = E_PAR;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  オブジェクトIDの範囲の判定
@@ -137,115 +137,115 @@
 /*
  *  オブジェクトIDのチェック（E_ID）
  */
-#define CHECK_TSKID(tskid) {								\
+#define CHECK_TSKID(tskid) do {								\
 	if (!VALID_TSKID(tskid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_TSKID_SELF(tskid) {							\
+#define CHECK_TSKID_SELF(tskid) do {						\
 	if (!(VALID_TSKID(tskid) || (tskid) == TSK_SELF)) {		\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_SEMID(semid) {								\
+#define CHECK_SEMID(semid) do {								\
 	if (!VALID_SEMID(semid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_FLGID(flgid) {								\
+#define CHECK_FLGID(flgid) do {								\
 	if (!VALID_FLGID(flgid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_DTQID(dtqid) {								\
+#define CHECK_DTQID(dtqid) do {								\
 	if (!VALID_DTQID(dtqid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_PDQID(pdqid) {								\
+#define CHECK_PDQID(pdqid) do {								\
 	if (!VALID_PDQID(pdqid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_MBXID(mbxid) {								\
+#define CHECK_MBXID(mbxid) do {								\
 	if (!VALID_MBXID(mbxid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_MPFID(mpfid) {								\
+#define CHECK_MPFID(mpfid) do {								\
 	if (!VALID_MPFID(mpfid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_CYCID(cycid) {								\
+#define CHECK_CYCID(cycid) do {								\
 	if (!VALID_CYCID(cycid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_ALMID(almid) {								\
+#define CHECK_ALMID(almid) do {								\
 	if (!VALID_ALMID(almid)) {								\
 		ercd = E_ID;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  呼出しコンテキストのチェック（E_CTX）
  */
-#define CHECK_TSKCTX() {									\
+#define CHECK_TSKCTX() do {									\
 	if (sense_context()) {									\
 		ercd = E_CTX;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_INTCTX() {									\
+#define CHECK_INTCTX() do {									\
 	if (!sense_context()) {									\
 		ercd = E_CTX;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  呼出しコンテキストとCPUロック状態のチェック（E_CTX）
  */
-#define CHECK_TSKCTX_UNL() {								\
+#define CHECK_TSKCTX_UNL() do {								\
 	if (sense_context() || t_sense_lock()) {				\
 		ercd = E_CTX;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
-#define CHECK_INTCTX_UNL() {								\
+#define CHECK_INTCTX_UNL() do {								\
 	if (!sense_context() || i_sense_lock()) {				\
 		ercd = E_CTX;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  ディスパッチ保留状態でないかのチェック（E_CTX）
  *  自タスクが制約タスクでないかのチェック（E_NOSPT）
  */
-#define CHECK_DISPATCH() {									\
+#define CHECK_DISPATCH() do {								\
 	if (sense_context() || t_sense_lock() || !dspflg) {		\
 		ercd = E_CTX;										\
 		goto error_exit;									\
@@ -254,46 +254,46 @@
 		ercd = E_NOSPT;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  対象タスクが制約タスクでないかのチェック（E_NOSPT）
  */
-#define CHECK_NONRSTR(p_tcb) {								\
+#define CHECK_NONRSTR(p_tcb) do {							\
 	if (((p_tcb)->p_tinib->tskatr & TA_RSTR) != 0U) {		\
 		ercd = E_NOSPT;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  その他のコンテキストエラーのチェック（E_CTX）
  */
-#define CHECK_CTX(exp) {									\
+#define CHECK_CTX(exp) do {									\
 	if (!(exp)) {											\
 		ercd = E_CTX;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  自タスクを指定していないかのチェック（E_ILUSE）
  */
-#define CHECK_NONSELF(p_tcb) {								\
+#define CHECK_NONSELF(p_tcb) do {							\
 	if ((p_tcb) == p_runtsk) {								\
 		ercd = E_ILUSE;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 /*
  *  その他の不正使用エラーのチェック（E_ILUSE）
  */
-#define CHECK_ILUSE(exp) {									\
+#define CHECK_ILUSE(exp) do {								\
 	if (!(exp)) {											\
 		ercd = E_ILUSE;										\
 		goto error_exit;									\
 	}														\
-}
+} while (false)
 
 #endif /* TOPPERS_CHECK_H */

@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: syslog.c 1846 2010-07-14 07:37:41Z ertl-hiro $
+ *  $Id: syslog.c 2247 2011-08-26 22:59:55Z ertl-hiro $
  */
 
 /*
@@ -116,7 +116,8 @@ void
 syslog_initialize(intptr_t exinf)
 {
 	syslog_count = 0U;
-	syslog_head = syslog_tail = 0U;
+	syslog_head = 0U;
+	syslog_tail = 0U;
 	syslog_lost = 0U;
 	syslog_logmask = 0U;
 	syslog_lowmask_not = 0U;
@@ -163,7 +164,7 @@ syslog_wri_log(uint_t prio, const SYSLOG *p_syslog)
 	 */
 	if (((~syslog_lowmask_not) & LOG_MASK(prio)) != 0U) {
 		syslog_print(p_syslog, target_fput_log);
-		(*target_fput_log)('\n');
+		target_fput_log('\n');
 	}
 
 	SIL_UNL_INT();
@@ -223,7 +224,7 @@ syslog_msk_log(uint_t logmask, uint_t lowmask)
 /*
  *  ログバッファの状態参照
  */
-ER_UINT
+ER
 syslog_ref_log(T_SYSLOG_RLOG *pk_rlog)
 {
 	SIL_PRE_LOC;

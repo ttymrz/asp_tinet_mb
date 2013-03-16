@@ -5,7 +5,7 @@
 # 
 #  Copyright (C) 2003 by Embedded and Real-Time Systems Laboratory
 #                              Toyohashi Univ. of Technology, JAPAN
-#  Copyright (C) 2005-2007 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: genrename 509 2007-08-22 23:09:56Z hiro $
+#  @(#) $Id: genrename 2253 2011-09-11 01:23:40Z ertl-hiro $
 # 
 
 #
@@ -68,7 +68,7 @@ sub generate_define
 	print FILE "\t" if (length($prefix.$sym) < 16);
 	print FILE "\t" if (length($prefix.$sym) < 20);
 	print FILE "\t" if (length($prefix.$sym) < 24);
-	print FILE "\t",$prefix,do prefix_string($sym),$sym,"\n";
+	print FILE "\t",$prefix,prefix_string($sym),$sym,"\n";
 }
 
 #
@@ -141,10 +141,10 @@ foreach $sym (@syms) {
 		print FILE " */\n";
 	}
 	elsif ($sym =~ /^INCLUDE[ \t]+(.*)$/) {
-		do generate_include($1, "rename");
+		generate_include($1, "rename");
 	}
 	elsif ($sym ne "") {
-		do generate_define($sym, "");
+		generate_define($sym, "");
 	}
 	else {
 		print FILE "\n";
@@ -167,7 +167,7 @@ foreach $sym (@syms) {
 		# do nothing
 	}
 	elsif ($sym ne "") {
-		do generate_define($sym, "_");
+		generate_define($sym, "_");
 	}
 	else {
 		print FILE "\n";
@@ -205,10 +205,10 @@ foreach $sym (@syms) {
 		print FILE " */\n";
 	}
 	elsif ($sym =~ /^INCLUDE[ \t]+(.*)$/) {
-		do generate_include($1, "unrename");
+		generate_include($1, "unrename");
 	}
 	elsif ($sym ne "") {
-		do generate_undef($sym, "");
+		generate_undef($sym, "");
 	}
 	else {
 		print FILE "\n";
@@ -231,7 +231,7 @@ foreach $sym (@syms) {
 		# do nothing
 	}
 	elsif ($sym ne "") {
-		do generate_undef($sym, "_");
+		generate_undef($sym, "_");
 	}
 	else {
 		print FILE "\n";

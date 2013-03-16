@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: serial.h 1176 2008-07-01 10:24:46Z ertl-hiro $
+ *  @(#) $Id: serial.h 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -67,16 +67,15 @@ extern void		serial_initialize(intptr_t exinf) throw();
 /*
  *  シリアルインタフェースドライバからの未送信文字の取出し
  */
-extern bool_t	serial_get_chr(ID portid, char_t *p_c) throw();
+extern bool_t	serial_get_chr(ID portid, char *p_c) throw();
 
 /*
  *  シリアルインタフェースドライバのサービスコール
  */
 extern ER		serial_opn_por(ID portid) throw();
 extern ER		serial_cls_por(ID portid) throw();
-extern ER_UINT	serial_rea_dat(ID portid, char_t *buf, uint_t len) throw();
-extern ER_UINT	serial_wri_dat(ID portid, const char_t *buf, uint_t len)
-																	throw();
+extern ER_UINT	serial_rea_dat(ID portid, char *buf, uint_t len) throw();
+extern ER_UINT	serial_wri_dat(ID portid, const char *buf, uint_t len) throw();
 extern ER		serial_ctl_por(ID portid, uint_t ioctl) throw();
 extern ER		serial_ref_por(ID portid, T_SERIAL_RPOR *pk_rpor) throw();
 

@@ -3,7 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems/
  *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +35,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: bit_kernel.c 1544 2009-05-08 07:53:48Z ertl-hiro $
+ *  @(#) $Id: bit_kernel.c 2136 2011-06-26 03:35:48Z ertl-hiro $
  */
 
 /*
@@ -148,7 +148,7 @@ bit_task(ID tskid)
 {
 	TCB			*p_tcb;
 	const TINIB	*p_tinib;
-	uint_t		tstat, tstat_wait, priority;
+	uint_t		tstat, tstat_wait, pri;
 	TMEVTB		*p_tmevtb;
 	SEMCB		*p_semcb;
 	FLGCB		*p_flgcb;
@@ -165,7 +165,7 @@ bit_task(ID tskid)
 	p_tinib = p_tcb->p_tinib;
 	tstat = p_tcb->tstat;
 	tstat_wait = (tstat & TS_WAIT_MASK);
-	priority = p_tcb->priority;
+	pri = p_tcb->priority;
 
 	/*
 	 *  初期化ブロックへのポインタの検査
@@ -217,7 +217,7 @@ bit_task(ID tskid)
 	/*
 	 *  タスク優先度の検査
 	 */
-	if (priority >= TNUM_TPRI) {
+	if (pri >= TNUM_TPRI) {
 		return(E_SYS_LINENO);
 	}
 
@@ -232,7 +232,7 @@ bit_task(ID tskid)
 	 *  休止状態におけるチェック
 	 */
 	if (TSTAT_DORMANT(tstat)) {
-		if (!(priority == p_tinib->ipriority)
+		if (!(pri == p_tinib->ipriority)
 					&& (p_tcb->wupque == false)
 					&& (p_tcb->enatex == false)
 					&& (p_tcb->texptn == 0U)) {
@@ -244,7 +244,7 @@ bit_task(ID tskid)
 	 *  実行できる状態におけるチェック
 	 */
 	if (TSTAT_RUNNABLE(tstat)) {
-		if (!in_queue(&ready_queue[priority], &(p_tcb->task_queue))) {
+		if (!in_queue(&ready_queue[pri], &(p_tcb->task_queue))) {
 			return(E_SYS_LINENO);
 		}
 	}

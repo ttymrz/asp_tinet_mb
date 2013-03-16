@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: task.h 2018 2010-12-31 13:43:05Z ertl-hiro $
+ *  $Id: task.h 2366 2012-05-06 09:22:22Z ertl-hiro $
  */
 
 /*
@@ -246,7 +246,7 @@ typedef struct task_control_block {
 #else /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
 	BIT_FIELD_UINT	priority : TBIT_TCB_PRIORITY;
 									/* 現在の優先度（内部表現）*/
-#endif  /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
+#endif /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
 	BIT_FIELD_BOOL	actque : 1;		/* 起動要求キューイング */
 	BIT_FIELD_BOOL	wupque : 1;		/* 起床要求キューイング */
 	BIT_FIELD_BOOL	enatex : 1;		/* タスク例外処理許可状態 */

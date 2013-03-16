@@ -5,7 +5,7 @@
 # 
 #  Copyright (C) 2003 by Embedded and Real-Time Systems Laboratory
 #                              Toyohashi Univ. of Technology, JAPAN
-#  Copyright (C) 2004-2007 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: applyrename 332 2007-07-17 12:15:37Z hiro $
+#  @(#) $Id: applyrename 2253 2011-09-11 01:23:40Z ertl-hiro $
 # 
 
 #
@@ -115,5 +115,5 @@ foreach $infile (@ARGV) {
 	# ファイルでなければスキップ
 	next unless (-f $infile);
 
-	do applyrename($infile) if ($infile ne $deffile);
+	applyrename($infile) if ($infile ne $deffile);
 }

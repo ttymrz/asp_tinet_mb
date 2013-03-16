@@ -36,7 +36,7 @@ $   に対する適合性も含めて，いかなる保証も行わない．また，本ソフトウェ
 $   アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 $   の責任を負わない．
 $ 
-$   @(#) $Id: kernel_check.tf 2062 2011-04-10 16:27:41Z ertl-hiro $
+$   @(#) $Id: kernel_check.tf 2366 2012-05-06 09:22:22Z ertl-hiro $
 $  
 $ =====================================================================
 
@@ -147,12 +147,12 @@ $	// タスクのスタック領域の先頭番地のチェック
 $	// 非タスクコンテキスト用のスタック領域の先頭番地のチェック
 	$istk = PEEK(SYMBOL("_kernel_istk"), sizeof_void_ptr)$
 	$IF CHECK_STACK_ALIGN && (istk & (CHECK_STACK_ALIGN - 1)) != 0$
-		$ERROR ICE.TEXT_LINE[1]$E_PAR: 
+		$ERROR ICS.TEXT_LINE[1]$E_PAR: 
 			$FORMAT(_("%1% `%2%\' in %3% is not aligned"),
 			"istk", ICS.ISTK[1], "DEF_ICS")$$END$
 	$END$
 	$IF CHECK_STACK_NONNULL && istk == 0$
-		$ERROR ICE.TEXT_LINE[1]$E_PAR: 
+		$ERROR ICS.TEXT_LINE[1]$E_PAR: 
 			$FORMAT(_("%1% `%2%\' in %3% is null"),
 			"istk", ICS.ISTK[1], "DEF_ICS")$$END$
 	$END$

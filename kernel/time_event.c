@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: time_event.c 1747 2010-02-11 18:24:19Z ertl-hiro $
+ *  $Id: time_event.c 2247 2011-08-26 22:59:55Z ertl-hiro $
  */
 
 /*
@@ -102,7 +102,8 @@ uint_t	last_index;
 void
 initialize_tmevt(void)
 {
-	current_time = min_time = 0U;
+	current_time = 0U;
+	min_time = 0U;
 	next_time = current_time + TIC_NUME / TIC_DENO;
 #if TIC_DENO != 1U
 	next_subtime = TIC_NUME % TIC_DENO;

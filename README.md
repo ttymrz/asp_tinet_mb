@@ -5,7 +5,7 @@ This is unofficial porting of [TOPPERS/ASP][TOPPERS/ASP] and [TINET][TINET] for 
 
 Based on:
 
- * asp-1.7.0
+ * asp-1.8.0
  * TINET 1.5.2
 
 The [TOPPERS/ASP] is a real-time kernel based on [uITRON][ITRON] 4.0 specification.

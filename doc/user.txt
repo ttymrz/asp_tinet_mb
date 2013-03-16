@@ -2,8 +2,8 @@
 		TOPPERS/ASPカーネル
 		ユーザーズマニュアル
 
-		対応バージョン: Release 1.7.0
-		最終更新: 2011年5月8日
+		対応バージョン: Release 1.8.0
+		最終更新: 2012年12月26日
 
 このドキュメントは，TOPPERS/ASPカーネルを使用するために必要な事項を説明
 するものである．
@@ -13,7 +13,7 @@
      Toyohashi Open Platform for Embedded Real-Time Systems/
      Advanced Standard Profile Kernel
 
- Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
+ Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
              Graduate School of Information Science, Nagoya Univ., JAPAN
  
  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -45,7 +45,7 @@
  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  の責任を負わない．
  
- $Id: user.txt 2069 2011-05-08 08:45:03Z ertl-hiro $
+ $Id: user.txt 2429 2012-12-26 11:24:30Z ertl-hiro $
 ----------------------------------------------------------------------
 
 ○目次
@@ -137,7 +137,7 @@ TOPPERS/ASPカーネル（以下，ASPカーネル）は，TOPPERS新世代カーネルの基盤
 ASPカーネルの仕様の概要については，「TOPPERS/ASPカーネルの仕様概要」を
 参照すること．また，ASPカーネルを含むTOPPERS新世代カーネルの仕様の詳細
 については，別途PDFファイルの形で配布している「TOPPERS新世代カーネル統
-合仕様書」を参照すること．
+合仕様書（Release 1.5.0）」を参照すること．
 
 1.3 マイグレーションガイド
 
@@ -261,7 +261,7 @@ ASPカーネルを用いたシステム構築には，以下のツールが必要である．
 		GNU Make	動作確認：3.81
 
 	TOPPERS新世代カーネル用コンフィギュレータ
-		cfg			動作確認：1.7.0
+		cfg			動作確認：1.9.0
 					※ 1.5以前のバージョンでは動作しない．
 
 	ターゲットシステム用のツール（クロス開発環境）
@@ -303,7 +303,7 @@ ASPカーネルを用いたシステム構築には，以下のツールが必要である．
 	ホストシステム用のツール（セルフ開発環境）
 		C++コンパイラ，C++ライブラリ
 					動作確認（Mac OS X環境）：GNU C++ 4.2.1
-		Boost		動作確認：1.42.0
+		Boost		動作確認：1.52.0
 		GNU Make	動作確認：3.81
 
 最初に，パッケージにコンフィギュレータのソースファイルが含まれていない
@@ -311,7 +311,7 @@ ASPカーネルを用いたシステム構築には，以下のツールが必要である．
 を展開したディレクトリの下に展開する．
 
 	% cd asp
-	% tar xvfz cfg-1.6.0.tar.gz
+	% tar xvfz cfg-1.9.0.tar.gz
 
 または，コンフィギュレータのパッケージを他のディレクトリに展開し，ASPカー
 ネルのソースファイルを展開したディレクトリからシンボリックリンクをはっ
@@ -323,13 +323,17 @@ ASPカーネルを用いたシステム構築には，以下のツールが必要である．
 築できる．
 
 	% cd cfg
-	% ./configure
+	% ./configure --without-xml
+	% make depend
 	% make
 
 ただし，Boostをインストールしたディレクトリおよび名称が標準で想定してい
 るものとは違う場合には，configureの--with-headersおよび--with-libraries
 オプションにより，ヘッダファイルおよびライブラリの置かれたディレクトリ
-を指定する必要がある．
+を指定する必要がある．--without-xmlは，AUTOSAR XMLファイルの読み込み機
+能（ASPカーネル用には必要ない）を取り込まないことを指定するオプションで
+ある（AUTOSAR XMLファイルの読み込み機能を取り込むには，Xerces-C++ XML
+Parserが必要になる）．
 
 また，ホストシステムによっては，最適化レベルを上げると正しくコンパイル
 できないことが知られている．そのような場合には，最適化レベルを下げるか，
@@ -476,9 +480,9 @@ libkernel.aする必要があるので注意すること．
 4.1 配布パッケージのディレクトリ構成
 
 	include/		アプリケーション向けヘッダファイル
-	kernel/			カーネルソースファイル
-	syssvc/			システムサービスヘッダファイル，ソースファイル
-	library/		サポートライブラリソースファイル
+	kernel/			カーネルのソースファイル
+	syssvc/			システムサービスのヘッダファイル，ソースファイル
+	library/		サポートライブラリのソースファイル
 	target/			ターゲット依存部
 	arch/			ターゲット依存部の共通部分
 		gcc/		GCC開発環境依存部
@@ -573,7 +577,6 @@ libkernel.aする必要があるので注意すること．
 		syslog.h		システムログ機能を使用するための定義
 		syslog.c		システムログ機能
 		syslog.cfg		システムログ機能のコンフィギュレーションファイル
-		vasyslog.c		可変数引数のシステムログライブラリ
 
 	library/
 		histogram.c		実行時間分布集計モジュール
@@ -581,6 +584,7 @@ libkernel.aする必要があるので注意すること．
 		strerror.c		エラーメッセージ文字列を返す関数
 		t_perror.c		エラーメッセージの出力
 		test_lib.c		テストプログラム用ライブラリ
+		vasyslog.c		可変数引数のシステムログライブラリ
 
 	arch/gcc/
 		MANIFEST		個別パッケージのファイルリスト
@@ -700,6 +704,21 @@ ASPカーネルを用いてアプリケーションを作成する場合には，まずオブジェクト
 		コンフィギュレータ（cfg）のパス名を指定する．省略した場合には，
 		デフォルトのパス名（ASPカーネルのソースディレクトリの下の
 		cfg/cfg/cfg）となる．
+
+	-o <オプション文字列>
+		コンパイラに与えるオプション文字列で，シンボル定義以外のもの．
+		シンボル定義のオプションは，-Oオプションを使用する．オプション
+		文字列にスペースが含まれる場合には，"-O2 -Wall"のように，""で囲
+		んで記述する必要がある．
+
+	-O <オプション文字列>
+		コンパイラに与えるシンボル定義のためのオプション文字列．オプショ
+		ン文字列にスペースが含まれる場合には，"-DTEST -DPERF"のように，
+		""で囲んで記述する必要がある．
+
+	-k <オプション文字列>
+		リンカに与えるオプション文字列．オプション文字列にスペースが含
+		まれる場合には，""で囲んで記述する必要がある．
 
 コンフィギュレーションスクリプトが行う処理は次の通りである．
 
@@ -1058,7 +1077,7 @@ SYSLOG構造体に格納されたログ情報を出力する場合には，ログ時刻は出力関数
 （lowmask）を設定する．ビットマップを作るためのマクロとして，LOG_MASKと
 LOG_UPTOを用意している．
 
-(4) ER_UINT syslog_ref_log(T_SYSLOG_RLOG *pk_rlog)
+(4) ER syslog_ref_log(T_SYSLOG_RLOG *pk_rlog)
 
 システムログ機能の状態を参照する．具体的には，ログバッファに記録されて
 いるログ情報の数（T_SYSLOG_RLOG構造体のcountフィールド），ログバッファ
@@ -1187,13 +1206,13 @@ portidで指定されたシリアルポートをオープンし，受信／送信が可能な状態に
 
 portidで指定されたシリアルポートをクローズする．
 
-(3) ER_UINT serial_rea_dat(ID portid, char_t *buf, uint_t len)
+(3) ER_UINT serial_rea_dat(ID portid, char *buf, uint_t len)
 
 portidで指定されたシリアルポートから，lenバイトの文字列を受信し，bufか
 らの領域に入れる．lenバイト受信するまで，待ち状態となる．受信した文字数
 またはエラーコードを返す．
 
-(4) ER_UINT serial_wri_dat(ID portid, const char_t *buf, uint_t len)
+(4) ER_UINT serial_wri_dat(ID portid, const char *buf, uint_t len)
 
 portidで指定されたシリアルポートに，bufからのlenバイトの文字列を送信す
 る．lenバイト送信バッファに入れるまで，待ち状態となる．送信した文字数ま
@@ -1252,7 +1271,7 @@ portidで指定されたシリアルポートの状態を参照し，pk_rporで指定されるパケッ
 シリアルインタフェースドライバを初期化する．カーネルに初期化ルーチンと
 して登録する．exinfは無視する．
 
-(2) bool_t serial_get_chr(ID portid, char_t *p_c)
+(2) bool_t serial_get_chr(ID portid, char *p_c)
 
 portidで指定されたシリアルポートの送信バッファ中の文字を，p_cの指す番地
 に取り出し，trueを返す関数．文字がなかった時には，falseを返す．終了処理
@@ -1410,18 +1429,18 @@ p_queueで指定するエントリの次のエントリをキューから削除し，削除したエン
 システムログ出力用ライブラリ関数を用いる場合には，log_output.hをインク
 ルードし，log_output.cをコンパイル・リンクする．
 
-(1) void syslog_printf(const char *format, const intptr_t *args,
-												void (*putc)(char_t))
+(1) void syslog_printf(const char *format, const intptr_t *p_args,
+												void (*putc)(char))
 
 formatで指定されるフォーマット記述とp_argsで指定される引数列から作成し
 たメッセージを，1文字出力関数putcを用いて出力する．
 
-(2) void syslog_print(const SYSLOG *p_sys, void (*putc)(char_t))
+(2) void syslog_print(const SYSLOG *p_syslog, void (*putc)(char))
 
 p_syslogで指定されるログ情報を文字列に直し，1文字出力関数putcを用いて出
 力する．
 
-(3) void syslog_lostmsg(uint_t lost, void (*putc)(char_t))
+(3) void syslog_lostmsg(uint_t lost, void (*putc)(char))
 
 lost個のログ情報が失われた旨のメッセージを，1文字出力関数putcを用いて出
 力する．
@@ -1453,13 +1472,13 @@ ID番号として，1〜TNUM_HISTを指定することができる．TNUM_HISTは，デフォル
 ターゲット依存部で設定を変更している場合の仕様については，ターゲット依
 存部のユーザーズマニュアルを参照すること．
 
-(1) void init_hist(ID histid, uint_t maxval, uint_t *hist)
+(1) void init_hist(ID histid, uint_t maxval, uint_t histarea[])
 
 histidで指定されたデータ構造を初期化する．maxvalには記録する最大時間を，
-histには記録領域の先頭番地を指定する．histで始まる記憶領域は，要素数が
-maxvalに指定した値+1のuint_t型の配列として確保する．例えば，maxvalに
-1000を指定する場合には，histには要素数が1001のuint_t型の配列の先頭番地
-を渡す．
+histareaには記録領域の先頭番地を指定する．histareaで始まる記憶領域は，
+要素数がmaxvalに指定した値+1のuint_t型の配列として確保する．例えば，
+maxvalに1000を指定する場合には，histareaには要素数が1001のuint_t型の配
+列の先頭番地を渡す．
 
 (2) void begin_measure(ID histid)
 
@@ -2204,9 +2223,9 @@ TOPPERSプロジェクトでは，何からの形でプロジェクトに貢献していただける方，
 
 (8) 割込み管理機能
 
+	CFG_INT(INTNO intno, { ATR intatr, PRI intpri })
 	ATT_ISR({ ATR isratr, intptr_t exinf, INTNO intno, ISR isr, PRI isrpri })
 	DEF_INH(INHNO inhno, { ATR inhatr, INTHDR inthdr })
-	CFG_INT(INTNO intno, { ATR intatr, PRI intpri })
 
 (9) CPU例外管理機能
 
@@ -2240,5 +2259,6 @@ TOPPERSプロジェクトでは，何からの形でプロジェクトに貢献していただける方，
 	2010年6月28日	Release 1.5.0		拡張パッケージを一般公開
 	2010年8月1日	Release 1.6.0		cfg-1.6に対応
 	2011年5月8日	Release 1.7.0		動的生成機能拡張パッケージ等の追加
+	2012年12月26日	Release 1.8.0
 
 以上

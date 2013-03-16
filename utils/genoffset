@@ -5,7 +5,7 @@
 # 
 #  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
 #                              Toyohashi Univ. of Technology, JAPAN
-#  Copyright (C) 2004-2010 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: genoffset 1891 2010-08-06 10:22:51Z ertl-hiro $
+#  @(#) $Id: genoffset 2253 2011-09-11 01:23:40Z ertl-hiro $
 # 
 
 #
@@ -193,7 +193,7 @@ sub parse_bit {
 	}
 
 	# ビット位置を探す
-	$val_bit = do search_bit($val);
+	$val_bit = search_bit($val);
 
 	# バイト単位に換算する
 	if ($endian eq "B") {
@@ -246,10 +246,10 @@ while ($line = <INFILE>) {
 	chomp $line;
 
 	if ($line =~ /^[ \t]*OFFSET_DEF ([^ \t]+) = [#\$]?([^ \t]+)/) {
-		do parse_offset($1, $2);
+		parse_offset($1, $2);
 	}
 	elsif ($line =~ /^[ \t]*_?BIT_REF_([0-9]+):/) {
-		do ref_bit($1);
+		ref_bit($1);
 	}
 	elsif ($line =~ /^[ \t]*SIL_ENDIAN = ([BL])/) {
 		$sil_endian = $1;
@@ -264,7 +264,7 @@ while ($line = <INFILE>) {
 	chomp $line;
 
 	if ($line =~ /^[ \t]*_?BIT_([BL])([BHW])_([^ \t]+):/) {
-		do parse_bit($1, $2, $3);
+		parse_bit($1, $2, $3);
 	}
 }
 close(INFILE);

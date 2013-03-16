@@ -1,9 +1,8 @@
 /*
- *  TOPPERS/ASP Kernel
- *      Toyohashi Open Platform for Embedded Real-Time Systems/
- *      Advanced Standard Profile Kernel
+ *  TOPPERS Software
+ *      Toyohashi Open Platform for Embedded Real-Time Systems
  * 
- *  Copyright (C) 2007,2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2007-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +34,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: trace_dump.c 1230 2008-08-08 05:52:17Z ertl-hiro $
+ *  $Id: trace_dump.c 2420 2012-11-11 06:34:11Z ertl-hiro $
  */
 
 /*
@@ -99,7 +98,7 @@ get_tskstat(intptr_t info)
  *  トレースログの表示
  */
 static void
-trace_print(TRACE *p_trace, void (*putc)(char_t))
+trace_print(TRACE *p_trace, void (*putc)(char))
 {
 	intptr_t	traceinfo[TMAX_LOGINFO + 1];
 	const char	*tracemsg;
@@ -146,9 +145,9 @@ void
 trace_dump(intptr_t exinf)
 {
 	TRACE	trace;
-	void	(*putc)(char_t);
+	void	(*putc)(char);
 
-	putc = (void (*)(char_t)) exinf;
+	putc = (void (*)(char)) exinf;
 	while (trace_rea_log(&trace) >= 0) {
 		trace_print(&trace, putc);
 	}

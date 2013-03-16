@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: task.h 2044 2011-03-06 11:48:03Z ertl-hiro $
+ *  $Id: task.h 2395 2012-08-06 02:45:37Z ertl-hiro $
  */
 
 /*
@@ -246,16 +246,16 @@ typedef struct task_control_block {
 #else /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
 	BIT_FIELD_UINT	priority : TBIT_TCB_PRIORITY;
 									/* 現在の優先度（内部表現）*/
-#endif  /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
+#endif /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
 	BIT_FIELD_BOOL	actque : 1;		/* 起動要求キューイング */
 	BIT_FIELD_BOOL	wupque : 1;		/* 起床要求キューイング */
 	BIT_FIELD_BOOL	enatex : 1;		/* タスク例外処理許可状態 */
 
 	TEXPTN			texptn;			/* 保留例外要因 */
 	WINFO			*p_winfo;		/* 待ち情報ブロックへのポインタ */
-#ifdef TOPPERS_SUPPORT_OVRTIM
+#ifdef TOPPERS_SUPPORT_OVRHDR
 	OVRTIM			leftotm;		/* 残りプロセッサ時間 */
-#endif /* TOPPERS_SUPPORT_OVRTIM */
+#endif /* TOPPERS_SUPPORT_OVRHDR */
 	TSKCTXB			tskctxb;		/* タスクコンテキストブロック */
 } TCB;
 

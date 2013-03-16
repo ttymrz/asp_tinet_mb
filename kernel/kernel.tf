@@ -5,7 +5,7 @@ $       Toyohashi Open Platform for Embedded Real-Time Systems/
 $       Advanced Standard Profile Kernel
 $ 
 $   Copyright (C) 2007 by TAKAGI Nobuhisa
-$   Copyright (C) 2007-2011 by Embedded and Real-Time Systems Laboratory
+$   Copyright (C) 2007-2012 by Embedded and Real-Time Systems Laboratory
 $               Graduate School of Information Science, Nagoya Univ., JAPAN
 $  
 $   上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@ $   に対する適合性も含めて，いかなる保証も行わない．また，本ソフトウェ
 $   アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 $   の責任を負わない．
 $ 
-$   $Id: kernel.tf 2024 2011-01-02 08:59:23Z ertl-hiro $
+$   $Id: kernel.tf 2426 2012-11-11 08:40:51Z ertl-hiro $
 $  
 $ =====================================================================
 
@@ -98,10 +98,6 @@ $FILE "kernel_cfg.c"$
 /* kernel_cfg.c */$NL$
 #include "kernel/kernel_int.h"$NL$
 #include "kernel_cfg.h"$NL$
-$NL$
-#ifndef TOPPERS_EMPTY_LABEL$NL$
-#define TOPPERS_EMPTY_LABEL(x,y) x y[0]$NL$
-#endif$NL$
 $NL$
 #if TKERNEL_PRID != 0x07u$NL$
 #error The kernel does not match this configuration file.$NL$
@@ -213,6 +209,7 @@ $	// stkszが0か，ターゲット定義の最小値（TARGET_MIN_STKSZ）よりも小さい場合（E_P
 									&& TSK.STKSZ[tskid] < TARGET_MIN_STKSZ)$
 		$ERROR TSK.TEXT_LINE[tskid]$E_PAR: $FORMAT(_("%1% `%2%\' of `%3%\' in %4% is too small"), "stksz", TSK.STKSZ[tskid], tskid, "CRE_TSK")$$END$
 	$END$
+
 $ 	// stkszがスタック領域のサイズとして正しくない場合（E_PAR）
 	$IF !EQ(TSK.STK[tskid], "NULL") && CHECK_STKSZ_ALIGN
 							&& (TSK.STKSZ[tskid] & (CHECK_STKSZ_ALIGN - 1))$
@@ -860,7 +857,7 @@ $END$$NL$
 $END$
 
 $ 割込み要求ラインの初期化に必要な情報
-$IF !OMIT_INITIALIZE_INTERRUPT || ALT(USE_INHINTB_TABLE,0)$
+$IF !OMIT_INITIALIZE_INTERRUPT || ALT(USE_INTINIB_TABLE,0)$
 
 $ 割込み要求ライン数
 #define TNUM_INTNO	$LENGTH(INT.ORDER_LIST)$$NL$
@@ -962,6 +959,12 @@ $ELSE$
 $	// 静的API「DEF_ICS」が複数ある（E_OBJ）
 	$IF LENGTH(ICS.ORDER_LIST) > 1$
 		$ERROR$E_OBJ: $FORMAT(_("too many %1%"), "DEF_ICS")$$END$
+	$END$
+
+$	// istkszが0か，ターゲット定義の最小値（TARGET_MIN_ISTKSZ）よりも小さい場合（E_PAR）
+	$IF ICS.ISTKSZ[1] == 0 || (TARGET_MIN_ISTKSZ
+									&& ICS.ISTKSZ[1] < TARGET_MIN_ISTKSZ)$
+		$ERROR ICS.TEXT_LINE[1]$E_PAR: $FORMAT(_("%1% `%2%\' in %3% is too small"), "istksz", ICS.ISTKSZ[1], "DEF_ICS")$$END$
 	$END$
 
 $ 	// istkszがスタック領域のサイズとして正しくない場合（E_PAR）

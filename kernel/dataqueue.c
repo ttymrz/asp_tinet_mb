@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: dataqueue.c 1960 2010-11-20 02:20:40Z ertl-hiro $
+ *  @(#) $Id: dataqueue.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -163,7 +163,8 @@ initialize_dataqueue(void)
 	uint_t	i;
 	DTQCB	*p_dtqcb;
 
-	for (p_dtqcb = dtqcb_table, i = 0; i < tnum_dtq; p_dtqcb++, i++) {
+	for (i = 0; i < tnum_dtq; i++) {
+		p_dtqcb = &(dtqcb_table[i]);
 		queue_initialize(&(p_dtqcb->swait_queue));
 		p_dtqcb->p_dtqinib = &(dtqinib_table[i]);
 		queue_initialize(&(p_dtqcb->rwait_queue));

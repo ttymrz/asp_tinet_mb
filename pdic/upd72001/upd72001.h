@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2006-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2006-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: upd72001.h 873 2008-04-11 10:32:26Z hiro $
+ *  @(#) $Id: upd72001.h 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -83,27 +83,27 @@ extern SIOPCB	*upd72001_opn_por(ID siopid, intptr_t exinf);
 /*
  *  シリアルI/Oポートのクローズ
  */
-extern void		upd72001_cls_por(SIOPCB *siopcb);
+extern void		upd72001_cls_por(SIOPCB *p_siopcb);
 
 /*
  *  シリアルI/Oポートへの文字送信
  */
-extern bool_t	upd72001_snd_chr(SIOPCB *siopcb, char_t c);
+extern bool_t	upd72001_snd_chr(SIOPCB *p_siopcb, char c);
 
 /*
  *  シリアルI/Oポートからの文字受信
  */
-extern int_t	upd72001_rcv_chr(SIOPCB *siopcb);
+extern int_t	upd72001_rcv_chr(SIOPCB *p_siopcb);
 
 /*
  *  シリアルI/Oポートからのコールバックの許可
  */
-extern void		upd72001_ena_cbr(SIOPCB *siopcb, uint_t cbrtn);
+extern void		upd72001_ena_cbr(SIOPCB *p_siopcb, uint_t cbrtn);
 
 /*
  *  シリアルI/Oポートからのコールバックの禁止
  */
-extern void		upd72001_dis_cbr(SIOPCB *siopcb, uint_t cbrtn);
+extern void		upd72001_dis_cbr(SIOPCB *p_siopcb, uint_t cbrtn);
 
 /*
  *  SIOの割込みサービスルーチン

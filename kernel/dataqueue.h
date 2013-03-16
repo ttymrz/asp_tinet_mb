@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: dataqueue.h 1960 2010-11-20 02:20:40Z ertl-hiro $
+ *  @(#) $Id: dataqueue.h 2228 2011-08-14 00:35:44Z ertl-hiro $
  */
 
 /*
@@ -47,7 +47,7 @@
 #ifndef TOPPERS_DATAQUEUE_H
 #define TOPPERS_DATAQUEUE_H
 
-#include <queue.h>
+#include "wait.h"
 
 /*
  *  データ管理ブロック

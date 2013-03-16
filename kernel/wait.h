@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: wait.h 1841 2010-07-10 17:37:34Z ertl-hiro $
+ *  @(#) $Id: wait.h 2128 2011-06-26 01:21:05Z ertl-hiro $
  */
 
 /*
@@ -60,11 +60,11 @@ Inline void
 queue_insert_tpri(QUEUE *p_queue, TCB *p_tcb)
 {
 	QUEUE	*p_entry;
-	uint_t	priority = p_tcb->priority;
+	uint_t	pri = p_tcb->priority;
 
 	for (p_entry = p_queue->p_next; p_entry != p_queue;
 										p_entry = p_entry->p_next) {
-		if (priority < ((TCB *) p_entry)->priority) {
+		if (pri < ((TCB *) p_entry)->priority) {
 			break;
 		}
 	}

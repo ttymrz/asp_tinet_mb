@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: dve68k.h 2066 2011-05-03 12:29:54Z ertl-hiro $
+ *  @(#) $Id: dve68k.h 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -228,7 +228,7 @@ dve68k_exit(void)
 }
 
 Inline void
-dve68k_putc(char_t c)
+dve68k_putc(char c)
 {
 	Asm("move.l %0, %%d1; trap #3"
 	  : /* no output */
@@ -239,7 +239,7 @@ dve68k_putc(char_t c)
 #else /* TOPPERS_GDB_STUB */		/* その他の開発環境 */
 
 extern void		dve68k_exit(void) NoReturn;
-extern void		dve68k_putc(char_t c);
+extern void		dve68k_putc(char c);
 
 #endif /* TOPPERS_GDB_STUB */
 #endif /* TOPPERS_MACRO_ONLY */

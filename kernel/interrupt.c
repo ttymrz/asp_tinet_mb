@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2009 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: interrupt.c 2009 2010-12-31 12:43:54Z ertl-hiro $
+ *  @(#) $Id: interrupt.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -97,10 +97,12 @@ initialize_interrupt(void)
 	const INHINIB	*p_inhinib;
 	const INTINIB	*p_intinib;
 
-	for (p_inhinib = inhinib_table, i = 0; i < tnum_inhno; p_inhinib++, i++) {
+	for (i = 0; i < tnum_inhno; i++) {
+		p_inhinib = &(inhinib_table[i]);
 		x_define_inh(p_inhinib->inhno, p_inhinib->int_entry);
 	}
-	for (p_intinib = intinib_table, i = 0; i < tnum_intno; p_intinib++, i++) {
+	for (i = 0; i < tnum_intno; i++) {
+		p_intinib = &(intinib_table[i]);
 		x_config_int(p_intinib->intno, p_intinib->intatr, p_intinib->intpri);
 	}
 }

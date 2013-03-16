@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: task.c 2018 2010-12-31 13:43:05Z ertl-hiro $
+ *  $Id: task.c 2247 2011-08-26 22:59:55Z ertl-hiro $
  */
 
 /*
@@ -116,7 +116,8 @@ initialize_task(void)
 	TCB		*p_tcb;
 	TINIB	*p_tinib;
 
-	p_runtsk = p_schedtsk = NULL;
+	p_runtsk = NULL;
+	p_schedtsk = NULL;
 	reqflg = false;
 	ipmflg = true;
 	disdsp = false;
@@ -134,7 +135,7 @@ initialize_task(void)
 		p_tcb->actque = false;
 		make_dormant(p_tcb);
 		if ((p_tcb->p_tinib->tskatr & TA_ACT) != 0U) {
-			make_active(p_tcb);
+			(void) make_active(p_tcb);
 		}
 	}
 	queue_initialize(&free_tcb);

@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: semaphore.c 748 2008-03-07 17:18:06Z hiro $
+ *  @(#) $Id: semaphore.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -131,7 +131,8 @@ initialize_semaphore(void)
 	uint_t	i;
 	SEMCB	*p_semcb;
 
-	for (p_semcb = semcb_table, i = 0; i < tnum_sem; p_semcb++, i++) {
+	for (i = 0; i < tnum_sem; i++) {
+		p_semcb = &(semcb_table[i]);
 		queue_initialize(&(p_semcb->wait_queue));
 		p_semcb->p_seminib = &(seminib_table[i]);
 		p_semcb->semcnt = p_semcb->p_seminib->isemcnt;

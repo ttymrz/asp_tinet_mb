@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: interrupt.c 2018 2010-12-31 13:43:05Z ertl-hiro $
+ *  @(#) $Id: interrupt.c 2415 2012-09-06 03:13:06Z ertl-hiro $
  */
 
 /*
@@ -158,12 +158,14 @@ initialize_isr(void)
 	for (i = 0; i < tnum_isr_queue; i++) {
 		queue_initialize(&(isr_queue_table[i]));
 	}
-	for (p_isrcb = isrcb_table, i = 0; i < tnum_sisr; p_isrcb++, i++) {
+	for (i = 0; i < tnum_sisr; i++) {
+		p_isrcb = &(isrcb_table[i]);
 		p_isrcb->p_isrinib = &(sisrinib_table[i]);
 		enqueue_isr(p_isrcb->p_isrinib->p_isr_queue, p_isrcb);
 	}
 	queue_initialize(&free_isrcb);
-	for (j = 0; i < tnum_isr; p_isrcb++, i++, j++) {
+	for (j = 0; i < tnum_isr; i++, j++) {
+		p_isrcb = &(isrcb_table[i]);
 		p_isrinib = &(aisrinib_table[j]);
 		p_isrinib->isratr = TA_NOEXS;
 		p_isrcb->p_isrinib = ((const ISRINIB *) p_isrinib);
@@ -258,10 +260,10 @@ acre_isr(const T_CISR *pk_cisr)
 	CHECK_ISRPRI(pk_cisr->isrpri);
 
 	p_isr_queue = search_isr_queue(pk_cisr->intno);
-	CHECK_PAR(p_isr_queue != NULL);
+	CHECK_OBJ(p_isr_queue != NULL);
 
 	t_lock_cpu();
-	if (queue_empty(&free_isrcb)) {
+	if (tnum_isr == 0 || queue_empty(&free_isrcb)) {
 		ercd = E_NOID;
 	}
 	else {
@@ -334,10 +336,12 @@ initialize_interrupt(void)
 	const INHINIB	*p_inhinib;
 	const INTINIB	*p_intinib;
 
-	for (p_inhinib = inhinib_table, i = 0; i < tnum_inhno; p_inhinib++, i++) {
+	for (i = 0; i < tnum_inhno; i++) {
+		p_inhinib = &(inhinib_table[i]);
 		x_define_inh(p_inhinib->inhno, p_inhinib->int_entry);
 	}
-	for (p_intinib = intinib_table, i = 0; i < tnum_intno; p_intinib++, i++) {
+	for (i = 0; i < tnum_intno; i++) {
+		p_intinib = &(intinib_table[i]);
 		x_config_int(p_intinib->intno, p_intinib->intatr, p_intinib->intpri);
 	}
 }

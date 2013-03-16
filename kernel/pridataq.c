@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: pridataq.c 1774 2010-03-19 12:45:46Z ertl-hiro $
+ *  @(#) $Id: pridataq.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -148,7 +148,8 @@ initialize_pridataq(void)
 	uint_t	i;
 	PDQCB	*p_pdqcb;
 
-	for (p_pdqcb = pdqcb_table, i = 0; i < tnum_pdq; p_pdqcb++, i++) {
+	for (i = 0; i < tnum_pdq; i++) {
+		p_pdqcb = &(pdqcb_table[i]);
 		queue_initialize(&(p_pdqcb->swait_queue));
 		p_pdqcb->p_pdqinib = &(pdqinib_table[i]);
 		queue_initialize(&(p_pdqcb->rwait_queue));

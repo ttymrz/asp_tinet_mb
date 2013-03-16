@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: mempfix.c 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: mempfix.c 2415 2012-09-06 03:13:06Z ertl-hiro $
  */
 
 /*
@@ -153,7 +153,8 @@ initialize_mempfix(void)
 	MPFCB	*p_mpfcb;
 	MPFINIB	*p_mpfinib;
 
-	for (p_mpfcb = mpfcb_table, i = 0; i < tnum_smpf; p_mpfcb++, i++) {
+	for (i = 0; i < tnum_smpf; i++) {
+		p_mpfcb = &(mpfcb_table[i]);
 		queue_initialize(&(p_mpfcb->wait_queue));
 		p_mpfcb->p_mpfinib = &(mpfinib_table[i]);
 		p_mpfcb->fblkcnt = p_mpfcb->p_mpfinib->blkcnt;
@@ -161,7 +162,8 @@ initialize_mempfix(void)
 		p_mpfcb->freelist = INDEX_NULL;
 	}
 	queue_initialize(&free_mpfcb);
-	for (j = 0; i < tnum_mpf; p_mpfcb++, i++, j++) {
+	for (j = 0; i < tnum_mpf; i++, j++) {
+		p_mpfcb = &(mpfcb_table[i]);
 		p_mpfinib = &(ampfinib_table[j]);
 		p_mpfinib->mpfatr = TA_NOEXS;
 		p_mpfcb->p_mpfinib = ((const MPFINIB *) p_mpfinib);
@@ -224,7 +226,7 @@ acre_mpf(const T_CMPF *pk_cmpf)
 	p_mpfmb = pk_cmpf->mpfmb;
 
 	t_lock_cpu();
-	if (queue_empty(&free_mpfcb)) {
+	if (tnum_mpf == 0 || queue_empty(&free_mpfcb)) {
 		ercd = E_NOID;
 	}
 	else {

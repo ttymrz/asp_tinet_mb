@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: eventflag.c 748 2008-03-07 17:18:06Z hiro $
+ *  @(#) $Id: eventflag.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -139,7 +139,8 @@ initialize_eventflag(void)
 	uint_t	i;
 	FLGCB	*p_flgcb;
 
-	for (p_flgcb = flgcb_table, i = 0; i < tnum_flg; p_flgcb++, i++) {
+	for (i = 0; i < tnum_flg; i++) {
+		p_flgcb = &(flgcb_table[i]);
 		queue_initialize(&(p_flgcb->wait_queue));
 		p_flgcb->p_flginib = &(flginib_table[i]);
 		p_flgcb->flgptn = p_flgcb->p_flginib->iflgptn;

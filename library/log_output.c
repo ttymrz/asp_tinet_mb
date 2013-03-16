@@ -4,7 +4,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -36,7 +36,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: log_output.c 1176 2008-07-01 10:24:46Z ertl-hiro $
+ *  @(#) $Id: log_output.c 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -45,6 +45,7 @@
 
 #include <t_stddef.h>
 #include <t_syslog.h>
+#include <log_output.h>
 
 /*
  *  数値を文字列に変換
@@ -53,7 +54,7 @@
 										/* uintptr_t型の数値の最大文字数 */
 static void
 convert(uintptr_t val, uint_t radix, const char *radchar,
-			uint_t width, bool_t minus, bool_t padzero, void (*putc)(char_t))
+			uint_t width, bool_t minus, bool_t padzero, void (*putc)(char))
 {
 	char	buf[CONVERT_BUFLEN];
 	uint_t	i, j;
@@ -71,7 +72,7 @@ convert(uintptr_t val, uint_t radix, const char *radchar,
 		(*putc)('-');
 	}
 	for (j = i; j < width; j++) {
-		(*putc)((char_t)(padzero ? '0' : ' '));
+		(*putc)(padzero ? '0' : ' ');
 	}
 	if (minus && !padzero) {
 		(*putc)('-');
@@ -89,7 +90,7 @@ static const char radhex[] = "0123456789abcdef";
 static const char radHEX[] = "0123456789ABCDEF";
 
 void
-syslog_printf(const char *format, const intptr_t *p_args, void (*putc)(char_t))
+syslog_printf(const char *format, const intptr_t *p_args, void (*putc)(char))
 {
 	char		c;
 	uint_t		width;
@@ -142,7 +143,7 @@ syslog_printf(const char *format, const intptr_t *p_args, void (*putc)(char_t))
 			convert((uintptr_t) val, 16U, radHEX, width, false, padzero, putc);
 			break;
 		case 'c':
-			(*putc)((char_t)(intptr_t)(*p_args++));
+			(*putc)((char)(intptr_t)(*p_args++));
 			break;
 		case 's':
 			str = (const char *)(*p_args++);
@@ -166,7 +167,7 @@ syslog_printf(const char *format, const intptr_t *p_args, void (*putc)(char_t))
  *  ログ情報の出力
  */
 void
-syslog_print(const SYSLOG *p_syslog, void (*putc)(char_t))
+syslog_print(const SYSLOG *p_syslog, void (*putc)(char))
 {
 	switch (p_syslog->logtype) {
 	case LOG_TYPE_COMMENT:
@@ -177,6 +178,11 @@ syslog_print(const SYSLOG *p_syslog, void (*putc)(char_t))
 		syslog_printf("%s:%u: Assertion `%s' failed.",
 								&(p_syslog->loginfo[0]), putc);
 		break;
+	default:
+		/*
+		 *  他の種別のログ情報には対応していない．
+		 */
+		break;
 	}
 }
 
@@ -184,11 +190,11 @@ syslog_print(const SYSLOG *p_syslog, void (*putc)(char_t))
  *  ログ情報喪失メッセージの出力
  */
 void
-syslog_lostmsg(uint_t lost, void (*putc)(char_t))
+syslog_lostmsg(uint_t lostlog, void (*putc)(char))
 {
 	intptr_t	lostinfo[1];
 
-	lostinfo[0] = (intptr_t) lost;
+	lostinfo[0] = (intptr_t) lostlog;
 	syslog_printf("%d messages are lost.", lostinfo, putc);
 	(*putc)('\n');
 }
