@@ -3,6 +3,7 @@
  * 
  *  Copyright (C) 2001-2009 by Dep. of Computer Science and Engineering
  *                   Tomakomai National College of Technology, JAPAN
+ *  Copyright (C) 2012-2013 by Tetsuya Morizumi
  *
  *  上記著作権者は，以下の (1)〜(4) の条件か，Free Software Foundation 
  *  によって公表されている GNU General Public License の Version 2 に記
@@ -28,7 +29,7 @@
  *  含めて，いかなる保証も行わない．また，本ソフトウェアの利用により直
  *  接的または間接的に生じたいかなる損害に関しても，その責任を負わない．
  * 
- *  @(#) $Id: tinet_app_config.h,v 1.5 2009/12/24 06:20:39 abe Exp abe $
+ *  $Id: tinet_app_config.h $
  */
 
 #ifndef _TINET_APP_CONFIG_H_
@@ -264,9 +265,9 @@
 
 #else	/* of #ifdef DHCP_CFG */
 
-#define IPV4_ADDR_LOCAL			MAKE_IPV4_ADDR(172,25,193,200)
-#define IPV4_ADDR_LOCAL_MASK		MAKE_IPV4_ADDR(255,255,240,0)
-#define IPV4_ADDR_DEFAULT_GW		MAKE_IPV4_ADDR(172,25,193,140)
+#define IPV4_ADDR_LOCAL			MAKE_IPV4_ADDR(192,168,1,21)
+#define IPV4_ADDR_LOCAL_MASK		MAKE_IPV4_ADDR(255,255,255,0)
+#define IPV4_ADDR_DEFAULT_GW		MAKE_IPV4_ADDR(192,168,1,1)
 
 #endif	/* of #ifdef DHCP_CFG */
 
