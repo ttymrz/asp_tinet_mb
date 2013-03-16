@@ -33,8 +33,8 @@ const TCB	TCB_enatex = {
 #ifdef TOPPERS_SUPPORT_MUTEX
 	{ NULL, NULL },			/* mutex_queue */
 #endif /* TOPPERS_SUPPORT_MUTEX */
-#ifdef TOPPERS_SUPPORT_OVRTIM
+#ifdef TOPPERS_SUPPORT_OVRHDR
 	0U,						/* leftotm */
-#endif /* TOPPERS_SUPPORT_OVRTIM */
+#endif /* TOPPERS_SUPPORT_OVRHDR */
 	{ NULL, NULL }			/* tskctxb */
 };
