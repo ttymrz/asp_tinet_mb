@@ -1,8 +1,9 @@
 PACKAGE asp_arch_microblaze_gcc
+VERSION 1.8.0
 
-MANIFEST
-
+E_PACKAGE
 Makefile.target
+MANIFEST
 aes_s6mb_lx9_g.ld
 target.tf
 target_cfg1_out.h
