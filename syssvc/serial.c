@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: serial.c 2055 2011-04-10 11:36:13Z ertl-hiro $
+ *  @(#) $Id: serial.c 2247 2011-08-26 22:59:55Z ertl-hiro $
  */
 
 /*
@@ -62,8 +62,8 @@
 #define	SERIAL_SND_BUFSZ1	256			/* ポート1の送信バッファサイズ */
 #endif /* SERIAL_SND_BUFSZ1 */
 
-static char_t	rcv_buffer1[SERIAL_RCV_BUFSZ1];
-static char_t	snd_buffer1[SERIAL_SND_BUFSZ1];
+static char	rcv_buffer1[SERIAL_RCV_BUFSZ1];
+static char	snd_buffer1[SERIAL_SND_BUFSZ1];
 
 #if TNUM_PORT >= 2						/* ポート2に関する定義 */
 
@@ -75,8 +75,8 @@ static char_t	snd_buffer1[SERIAL_SND_BUFSZ1];
 #define	SERIAL_SND_BUFSZ2	256			/* ポート2の送信バッファサイズ */
 #endif /* SERIAL_SND_BUFSZ2 */
 
-static char_t	rcv_buffer2[SERIAL_RCV_BUFSZ2];
-static char_t	snd_buffer2[SERIAL_SND_BUFSZ2];
+static char	rcv_buffer2[SERIAL_RCV_BUFSZ2];
+static char	snd_buffer2[SERIAL_SND_BUFSZ2];
 
 #endif /* TNUM_PORT >= 2 */
 
@@ -90,8 +90,8 @@ static char_t	snd_buffer2[SERIAL_SND_BUFSZ2];
 #define	SERIAL_SND_BUFSZ3	256			/* ポート3の送信バッファサイズ */
 #endif /* SERIAL_SND_BUFSZ3 */
 
-static char_t	rcv_buffer3[SERIAL_RCV_BUFSZ3];
-static char_t	snd_buffer3[SERIAL_SND_BUFSZ3];
+static char	rcv_buffer3[SERIAL_RCV_BUFSZ3];
+static char	snd_buffer3[SERIAL_SND_BUFSZ3];
 
 #endif /* TNUM_PORT >= 3 */
 
@@ -105,8 +105,8 @@ static char_t	snd_buffer3[SERIAL_SND_BUFSZ3];
 #define	SERIAL_SND_BUFSZ4	256			/* ポート4の送信バッファサイズ */
 #endif /* SERIAL_SND_BUFSZ4 */
 
-static char_t	rcv_buffer4[SERIAL_RCV_BUFSZ4];
-static char_t	snd_buffer4[SERIAL_SND_BUFSZ4];
+static char	rcv_buffer4[SERIAL_RCV_BUFSZ4];
+static char	snd_buffer4[SERIAL_SND_BUFSZ4];
 
 #endif /* TNUM_PORT >= 4 */
 
@@ -126,9 +126,9 @@ typedef struct serial_port_initialization_block {
 	ID		rcv_semid;		/* 受信バッファ管理用セマフォのID */
 	ID		snd_semid;		/* 送信バッファ管理用セマフォのID */
 	uint_t	rcv_bufsz;		/* 受信バッファサイズ */
-	char_t	*rcv_buffer;	/* 受信バッファ */
+	char	*rcv_buffer;	/* 受信バッファ */
 	uint_t	snd_bufsz;		/* 送信バッファサイズ */
-	char_t	*snd_buffer;	/* 送信バッファ */
+	char	*snd_buffer;	/* 送信バッファ */
 } SPINIB;
 
 static const SPINIB spinib_table[TNUM_PORT] = {
@@ -165,7 +165,7 @@ typedef struct serial_port_control_block {
 	uint_t	rcv_read_ptr;		/* 受信バッファ読出しポインタ */
 	uint_t	rcv_write_ptr;		/* 受信バッファ書込みポインタ */
 	uint_t	rcv_count;			/* 受信バッファ中の文字数 */
-	char_t	rcv_fc_chr;			/* 送るべきSTART/STOP */
+	char	rcv_fc_chr;			/* 送るべきSTART/STOP */
 	bool_t	rcv_stopped;		/* STOPを送った状態か？ */
 
 	uint_t	snd_read_ptr;		/* 送信バッファ読出しポインタ */
@@ -185,7 +185,11 @@ static SPCB	spcb_table[TNUM_PORT];
 /*
  *  ポインタのインクリメント
  */
-#define INC_PTR(ptr, bufsz)		{ if (++(ptr) == (bufsz)) { (ptr) = 0; }}
+#define INC_PTR(ptr, bufsz) do {	\
+	if (++(ptr) == (bufsz)) {		\
+		(ptr) = 0;					\
+	 }								\
+} while (false)
 
 /*
  *  サービスコール呼出しマクロ
@@ -193,8 +197,12 @@ static SPCB	spcb_table[TNUM_PORT];
  *  サービスコール呼出しを含む式expを評価し，返値がエラー（負の値）の場
  *  合には，ercにercd_expを評価した値を代入し，error_exitにgotoする．
  */
-#define SVC(exp, ercd_exp) \
-				{ if ((exp) < 0) { ercd = (ercd_exp); goto error_exit; }}
+#define SVC(exp, ercd_exp) do {		\
+	if ((exp) < 0) {				\
+		ercd = (ercd_exp);			\
+		goto error_exit;			\
+	}								\
+} while (false)
 
 /*
  *  E_SYSエラーの生成
@@ -231,7 +239,8 @@ serial_initialize(intptr_t exinf)
 	uint_t	i;
 	SPCB	*p_spcb;
 
-	for (p_spcb = spcb_table, i = 0; i < TNUM_PORT; p_spcb++, i++) {
+	for (i = 0; i < TNUM_PORT; i++) {
+		p_spcb = &(spcb_table[i]);
 		p_spcb->p_spinib = &(spinib_table[i]);
 		p_spcb->openflag = false;
 	}
@@ -264,12 +273,14 @@ serial_opn_por(ID portid)
 		 */
 		p_spcb->ioctl = (IOCTL_ECHO | IOCTL_CRLF | IOCTL_FCSND | IOCTL_FCRCV);
 
-		p_spcb->rcv_read_ptr = p_spcb->rcv_write_ptr = 0U;
+		p_spcb->rcv_read_ptr = 0U;
+		p_spcb->rcv_write_ptr = 0U;
 		p_spcb->rcv_count = 0U;
 		p_spcb->rcv_fc_chr = '\0';
 		p_spcb->rcv_stopped = false;
 
-		p_spcb->snd_read_ptr = p_spcb->snd_write_ptr = 0U;
+		p_spcb->snd_read_ptr = 0U;
+		p_spcb->snd_write_ptr = 0U;
 		p_spcb->snd_count = 0U;
 		p_spcb->snd_stopped = false;
 
@@ -378,7 +389,7 @@ serial_cls_por(ID portid)
  *  この関数は，CPUロック状態で呼び出される．
  */
 Inline bool_t
-serial_snd_chr(SPCB *p_spcb, char_t c)
+serial_snd_chr(SPCB *p_spcb, char c)
 {
 	if (sio_snd_chr(p_spcb->p_siopcb, c)) {
 		return(true);
@@ -393,7 +404,7 @@ serial_snd_chr(SPCB *p_spcb, char_t c)
  *  シリアルポートへの1文字送信
  */
 static ER_BOOL
-serial_wri_chr(SPCB *p_spcb, char_t c)
+serial_wri_chr(SPCB *p_spcb, char c)
 {
 	bool_t	buffer_full;
 	ER		ercd, rercd;
@@ -402,6 +413,11 @@ serial_wri_chr(SPCB *p_spcb, char_t c)
 	 *  LFの前にCRを送信する．
 	 */
 	if (c == '\n' && (p_spcb->ioctl & IOCTL_CRLF) != 0U) {
+		/*
+		 *  以下のコードは再帰呼出しになっているが，引数cが'\n'の場合に
+		 *  引数cを'\r'として呼び出すことから，この再帰呼出しは2回目の
+		 *  呼び出しで必ず止まる．
+		 */
 		SVC(rercd = serial_wri_chr(p_spcb, '\r'), rercd);
 		if ((bool_t) rercd) {
 			SVC(rercd = wai_sem(p_spcb->p_spinib->snd_semid),
@@ -439,7 +455,7 @@ serial_wri_chr(SPCB *p_spcb, char_t c)
  *  シリアルポートへの文字列送信（サービスコール）
  */
 ER_UINT
-serial_wri_dat(ID portid, const char_t *buf, uint_t len)
+serial_wri_dat(ID portid, const char *buf, uint_t len)
 {
 	SPCB	*p_spcb;
 	bool_t	buffer_full;
@@ -484,7 +500,7 @@ serial_wri_dat(ID portid, const char_t *buf, uint_t len)
  *  シリアルポートからの1文字受信
  */
 static bool_t
-serial_rea_chr(SPCB *p_spcb, char_t *p_c)
+serial_rea_chr(SPCB *p_spcb, char *p_c)
 {
 	bool_t	buffer_empty;
 	ER		ercd;
@@ -521,12 +537,12 @@ serial_rea_chr(SPCB *p_spcb, char_t *p_c)
  *  シリアルポートからの文字列受信（サービスコール）
  */
 ER_UINT
-serial_rea_dat(ID portid, char_t *buf, uint_t len)
+serial_rea_dat(ID portid, char *buf, uint_t len)
 {
 	SPCB	*p_spcb;
 	bool_t	buffer_empty;
 	uint_t	reacnt = 0U;
-	char_t	c = '\0';		/* コンパイラの警告を抑止するために初期化する */
+	char	c = '\0';		/* コンパイラの警告を抑止するために初期化する */
 	ER		ercd, rercd;
 
 	if (sns_dpn()) {				/* コンテキストのチェック */
@@ -677,10 +693,10 @@ void
 sio_irdy_rcv(intptr_t exinf)
 {
 	SPCB	*p_spcb;
-	char_t	c;
+	char	c;
 
 	p_spcb = (SPCB *) exinf;
-	c = (char_t) sio_rcv_chr(p_spcb->p_siopcb);
+	c = (char) sio_rcv_chr(p_spcb->p_siopcb);
 	if ((p_spcb->ioctl & IOCTL_FCSND) != 0U && c == FC_STOP) {
 		/*
 		 *  送信を一時停止する．送信中の文字はそのまま送信する．
@@ -747,7 +763,7 @@ sio_irdy_rcv(intptr_t exinf)
  *  シリアルインタフェースドライバからの未送信文字の取出し
  */
 bool_t
-serial_get_chr(ID portid, char_t *p_c)
+serial_get_chr(ID portid, char *p_c)
 {
 	SPCB	*p_spcb;
 

@@ -79,6 +79,9 @@ offsetof_PDQINIB_p_pdqmb,"offsetof(PDQINIB,p_pdqmb)"
 sizeof_MBXINIB,sizeof(MBXINIB)
 offsetof_MBXINIB_mbxatr,"offsetof(MBXINIB,mbxatr)"
 offsetof_MBXINIB_maxmpri,"offsetof(MBXINIB,maxmpri)"
+sizeof_MTXINIB,sizeof(MTXINIB)
+offsetof_MTXINIB_mtxatr,"offsetof(MTXINIB,mtxatr)"
+offsetof_MTXINIB_ceilpri,"offsetof(MTXINIB,ceilpri)"
 sizeof_MPFINIB,sizeof(MPFINIB)
 offsetof_MPFINIB_mpfatr,"offsetof(MPFINIB,mpfatr)"
 offsetof_MPFINIB_blkcnt,"offsetof(MPFINIB,blkcnt)"

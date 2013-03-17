@@ -3,6 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems
  * 
  *  Copyright (C) 2002-2008 by Y.D.K Co.,Ltd
+ *  Copyright (C) 2012-2013 by Tetsuya Morizumi
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
@@ -81,8 +82,8 @@ TCB	BIT_BB_TCB_enatex = {
 #ifdef TOPPERS_SUPPORT_MUTEX
 	{ NULL, NULL },			/* mutex_queue */
 #endif /* TOPPERS_SUPPORT_MUTEX */
-#ifdef TOPPERS_SUPPORT_OVRTIM
+#ifdef TOPPERS_SUPPORT_OVRHDR
 	0U,						/* leftotm */
-#endif /* TOPPERS_SUPPORT_OVRTIM */
+#endif /* TOPPERS_SUPPORT_OVRHDR */
 	{ NULL, NULL }			/* tskctxb */
 };

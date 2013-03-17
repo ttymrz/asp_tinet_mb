@@ -5,7 +5,7 @@
 # 
 #  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
 #                              Toyohashi Univ. of Technology, JAPAN
-#  Copyright (C) 2004-2007 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,10 +37,10 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: makedep 2004 2010-12-31 00:43:36Z ertl-hiro $
+#  @(#) $Id: makedep 2264 2011-10-27 04:22:01Z ertl-hiro $
 # 
 
-require "getopt.pl";
+use Getopt::Std;
 
 #  オプションの定義
 #
@@ -62,7 +62,7 @@ require "getopt.pl";
 #
 #  オプションの処理
 #
-do Getopt("COTDR");
+getopt("COTDR");
 
 $cc_path = $opt_C;
 $cc_opts = $opt_O;
@@ -87,9 +87,7 @@ else {
 #
 #  Cygwin環境の判別
 #
-use POSIX;
-@uname = do uname();
-if ($uname[0] =~ /^cygwin/i) {
+if ($^O eq 'cygwin') {
 	$cygwin = 1;
 }
 
@@ -136,6 +134,7 @@ sub makedepend_one {
 			$filename =~ s/ /\\ /g;
 			if ($filename !~ /^\<.*\>$/ && $filename !~ /\/$/) {
 				if ($cygwin) {
+					$filename =~ s/\\\\/\//g;
 					$filename =~ s/^([a-zA-Z]):/\/$cygwin_root\/$1/;
 				}
 				$dependlist{$filename} = 1;
@@ -153,16 +152,16 @@ sub makedepend_one {
 #
 foreach $file (@ARGV) {
 	%dependlist = ();
-	do makedepend_one($file);
+	makedepend_one($file);
 	if (%dependlist) {
 		if ($target_name) {
 			if ($opt_S) {
 				foreach $target (split(/[ \t]+/, $target_name)) {
-					do output_dependlist($target);
+					output_dependlist($target);
 				}
 			}
 			else {
-				do output_dependlist($target_name);
+				output_dependlist($target_name);
 			}
 		}
 		else {
@@ -174,7 +173,7 @@ foreach $file (@ARGV) {
 					$target = $target_dir."/".$target;
 				}
 			}
-			do output_dependlist($target);
+			output_dependlist($target);
 		}
 	}
 }

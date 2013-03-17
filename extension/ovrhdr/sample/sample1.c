@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: sample1.c 1932 2010-09-19 06:57:36Z ertl-hiro $
+ *  $Id: sample1.c 2416 2012-09-07 08:06:20Z ertl-hiro $
  */
 
 /* 
@@ -48,19 +48,23 @@
  *  プログラムの概要:
  *
  *  ユーザインタフェースを受け持つメインタスク（タスクID: MAIN_TASK，優
- *  先度: MAIN_PRIORITY）と，3つの並列実行されるタスク（タスクID:
+ *  先度: MAIN_PRIORITY）と，3つの並行実行されるタスク（タスクID:
  *  TASK1〜TASK3，初期優先度: MID_PRIORITY）で構成される．また，起動周
  *  期が2秒の周期ハンドラ（周期ハンドラID: CYCHDR1）を用いる．
  *
- *  並列実行されるタスクは，task_loop回空ループを実行する度に，タスクが
- *  実行中であることをあらわすメッセージを表示する．
+ *  並行実行されるタスクは，task_loop回空ループを実行する度に，タスクが
+ *  実行中であることをあらわすメッセージを表示する．空ループを実行する
+ *  のは，空ループなしでメッセージを出力すると，多量のメッセージが出力
+ *  され，プログラムの動作が確認しずらくなるためである．また，低速なシ
+ *  リアルポートを用いてメッセージを出力する場合に，すべてのメッセージ
+ *  が出力できるように，メッセージの量を制限するという理由もある．
  *
  *  周期ハンドラは，三つの優先度（HIGH_PRIORITY，MID_PRIORITY，
  *  LOW_PRIORITY）のレディキューを回転させる．プログラムの起動直後は，
  *  周期ハンドラは停止状態になっている．
  *
  *  メインタスクは，シリアルI/Oポートからの文字入力を行い（文字入力を
- *  待っている間は，並列実行されるタスクが実行されている），入力された
+ *  待っている間は，並行実行されるタスクが実行されている），入力された
  *  文字に対応した処理を実行する．入力された文字と処理の関係は次の通り．
  *  Control-Cまたは'Q'が入力されると，プログラムを終了する．
  *
@@ -127,7 +131,7 @@ svc_perror(const char *file, int_t line, const char *expr, ER ercd)
 /*
  *  並行実行されるタスクへのメッセージ領域
  */
-char_t	message[3];
+char	message[3];
 
 /*
  *  ループ回数
@@ -144,13 +148,13 @@ void task(intptr_t exinf)
 	int_t		n = 0;
 	int_t		tskno = (int_t) exinf;
 	const char	*graph[] = { "|    ", "  +  ", "    *" };
-	char_t		c;
+	char		c;
 #ifdef TOPPERS_SUPPORT_OVRHDR
 	T_ROVR		pk_rovr;
 #endif /* TOPPERS_SUPPORT_OVRHDR */
 
 	SVC_PERROR(ena_tex());
-	while (1) {
+	while (true) {
 #ifdef TOPPERS_SUPPORT_OVRHDR
 		SVC_PERROR(ref_ovr(TSK_SELF, &pk_rovr));
 		if ((pk_rovr.ovrstat & TOVR_STA) != 0) {
@@ -313,7 +317,7 @@ overrun_handler(ID tskid, intptr_t exinf)
  */
 void main_task(intptr_t exinf)
 {
-	char_t	c;
+	char	c;
 	ID		tskid = TASK1;
 	int_t	tskno = 1;
 	ER_UINT	ercd;
@@ -347,11 +351,33 @@ void main_task(intptr_t exinf)
 	/*
  	 *  ループ回数の設定
 	 *
-	 *  TASK_LOOPがマクロ定義されている場合，測定せずに，TASK_LOOPに定
-	 *  義された値を，タスク内でのループ回数とする．
+	 *  並行実行されるタスク内での空ループの回数（task_loop）は，空ルー
+	 *  プの実行時間が約0.4秒になるように設定する．この設定のために，
+	 *  LOOP_REF回の空ループの実行時間を，その前後でget_timを呼ぶことで
+	 *  測定し，その測定結果から空ループの実行時間が0.4秒になるループ回
+	 *  数を求め，task_loopに設定する．
 	 *
-	 *  MEASURE_TWICEがマクロ定義されている場合，1回目の測定結果を捨て
-	 *  て，2回目の測定結果を使う．1回目の測定は長めの時間が出るため．
+	 *  LOOP_REFは，デフォルトでは1,000,000に設定しているが，想定したよ
+	 *  り遅いプロセッサでは，サンプルプログラムの実行開始に時間がかか
+	 *  りすぎるという問題を生じる．逆に想定したより速いプロセッサでは，
+	 *  LOOP_REF回の空ループの実行時間が短くなり，task_loopに設定する値
+	 *  の誤差が大きくなるという問題がある．
+	 *
+	 *  そこで，そのようなターゲットでは，target_test.hで，LOOP_REFを適
+	 *  切な値に定義するのが望ましい．
+	 *
+	 *  また，task_loopの値を固定したい場合には，その値をTASK_LOOPにマ
+	 *  クロ定義する．TASK_LOOPがマクロ定義されている場合，上記の測定を
+	 *  行わずに，TASK_LOOPに定義された値を空ループの回数とする．
+	 *
+	 * ターゲットによっては，空ループの実行時間の1回目の測定で，本来よ
+	 * りも長めになるものがある．このようなターゲットでは，MEASURE_TWICE
+	 * をマクロ定義することで，1回目の測定結果を捨てて，2回目の測定結果
+	 * を使う．
+	 *
+	 *  タスク例外処理ルーチン内での空ループの回数（tex_loop）は，
+	 *  task_loopの4分の1の値（空ループの実行時間が0.1秒になるループ回
+	 *  数）に設定する．
 	 */
 #ifdef TASK_LOOP
 	task_loop = TASK_LOOP;
@@ -371,7 +397,7 @@ void main_task(intptr_t exinf)
 	task_loop = LOOP_REF * 400UL / (stime2 - stime1);
 
 #endif /* TASK_LOOP */
-	tex_loop = task_loop / 5;
+	tex_loop = task_loop / 4;
 
 	/*
  	 *  タスクの起動

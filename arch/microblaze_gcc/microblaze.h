@@ -4,6 +4,7 @@
  *      Advanced Standard Profile Kernel
  * 
  *  Copyright (C) 2002-2008 by Y.D.K Co.,Ltd
+ *  Copyright (C) 2012-2013 by Tetsuya Morizumi
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
@@ -233,7 +234,7 @@ microbalze_xuartl_init(void)
  *  カーネルの低レベル出力用関数(XPS UART Lite版)
  */
 Inline void
-microbalze_xuartl_putc(char_t c)
+microbalze_xuartl_putc(char c)
 {
 	while((sil_rew_mem((void*)(KENEL_LOW_OUT_XUARTL_BASE + XUARTL_STAT_OFFSET)) & XUARTL_STAT_TX_FULL_BIT) == XUARTL_STAT_TX_FULL_BIT);
 	sil_wrw_mem((void*)(KENEL_LOW_OUT_XUARTL_BASE + XUARTL_TX_OFFSET), c);

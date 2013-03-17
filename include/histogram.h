@@ -34,7 +34,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: histogram.h 1876 2010-07-29 16:27:57Z ertl-hiro $
+ *  @(#) $Id: histogram.h 2097 2011-06-17 07:57:50Z ertl-hiro $
  */
 
 /*
@@ -51,7 +51,7 @@ extern "C" {
 /*
  *  実行時間分布計測の初期化
  */
-extern void	init_hist(ID histid, uint_t maxval, uint_t *hist);
+extern void	init_hist(ID histid, uint_t maxval, uint_t histarea[]);
 
 /*
  *  実行時間計測の開始

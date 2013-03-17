@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2006-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2006-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: upd72001.c 873 2008-04-11 10:32:26Z hiro $
+ *  @(#) $Id: upd72001.c 2254 2011-10-07 08:28:12Z ertl-hiro $
  */
 
 /*
@@ -232,18 +232,18 @@ upd72001_putready(SIOPCB *p_siopcb)
 /*
  *  受信した文字の取出し
  */
-Inline char_t
+Inline char
 upd72001_getchar(SIOPCB *p_siopcb)
 {
 	p_siopcb->getready = false;
-	return((char_t) upd72001_read_reg(p_siopcb->p_siopinib->data));
+	return((char) upd72001_read_reg(p_siopcb->p_siopinib->data));
 }
 
 /*
  *  送信する文字の書込み
  */
 Inline void
-upd72001_putchar(SIOPCB *p_siopcb, char_t c)
+upd72001_putchar(SIOPCB *p_siopcb, char c)
 {
 	p_siopcb->putready = false;
 	upd72001_write_reg(p_siopcb->p_siopinib->data, (uint8_t) c);
@@ -270,7 +270,8 @@ upd72001_initialize(void)
 	/*
 	 *  シリアルI/Oポート管理ブロックの初期化
 	 */
-	for (p_siopcb = siopcb_table, i = 0; i < TNUM_SIOP; p_siopcb++, i++) {
+	for (i = 0; i < TNUM_SIOP; i++) {
+		p_siopcb = &(siopcb_table[i]);
 		p_siopcb->p_siopinib = &(siopinib_table[i]);
 		p_siopcb->openflag = false;
 	}
@@ -315,7 +316,8 @@ upd72001_opn_por(ID siopid, intptr_t exinf)
 	upd72001_write_ctrl(p_siopinib->ctrl, UPD72001_CR3, p_siopinib->cr3_def);
 	upd72001_write_ctrl(p_siopinib->ctrl, UPD72001_CR5, p_siopinib->cr5_def);
 	p_siopcb->exinf = exinf;
-	p_siopcb->getready = p_siopcb->putready = false;
+	p_siopcb->getready = false;
+	p_siopcb->putready = false;
 	p_siopcb->openflag = true;
 	return(p_siopcb);
 }
@@ -334,7 +336,7 @@ upd72001_cls_por(SIOPCB *p_siopcb)
  *  シリアルI/Oポートへの文字送信
  */
 bool_t
-upd72001_snd_chr(SIOPCB *p_siopcb, char_t c)
+upd72001_snd_chr(SIOPCB *p_siopcb, char c)
 {
 	if (upd72001_putready(p_siopcb)) {
 		upd72001_putchar(p_siopcb, c);
@@ -361,7 +363,7 @@ upd72001_rcv_chr(SIOPCB *p_siopcb)
 void
 upd72001_ena_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 {
-	uint8_t	cr1_bit = 0;
+	uint8_t	cr1_bit;
 
 	switch (cbrtn) {
 	case SIO_RDY_SND:
@@ -369,6 +371,9 @@ upd72001_ena_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 		break;
 	case SIO_RDY_RCV:
 		cr1_bit = CR1_RECV;
+		break;
+	default:
+		cr1_bit = 0U;
 		break;
 	}
 	p_siopcb->cr1 |= cr1_bit;
@@ -382,7 +387,7 @@ upd72001_ena_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 void
 upd72001_dis_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 {
-	uint8_t	cr1_bit = 0;
+	uint8_t	cr1_bit;
 
 	switch (cbrtn) {
 	case SIO_RDY_SND:
@@ -390,6 +395,9 @@ upd72001_dis_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 		break;
 	case SIO_RDY_RCV:
 		cr1_bit = CR1_RECV;
+		break;
+	default:
+		cr1_bit = 0U;
 		break;
 	}
 	p_siopcb->cr1 &= ~cr1_bit;
@@ -403,17 +411,21 @@ upd72001_dis_cbr(SIOPCB *p_siopcb, uint_t cbrtn)
 static void
 upd72001_isr_siop(SIOPCB *p_siopcb)
 {
-	if ((p_siopcb->cr1 & CR1_RECV) != 0U && upd72001_getready(p_siopcb)) {
-		/*
-		 *  受信通知コールバックルーチンを呼び出す．
-		 */
-		upd72001_irdy_rcv(p_siopcb->exinf);
+	if ((p_siopcb->cr1 & CR1_RECV) != 0U) {
+		if (upd72001_getready(p_siopcb)) {
+			/*
+			 *  受信通知コールバックルーチンを呼び出す．
+			 */
+			upd72001_irdy_rcv(p_siopcb->exinf);
+		}
 	}
-	if ((p_siopcb->cr1 & CR1_SEND) != 0U && upd72001_putready(p_siopcb)) {
-		/*
-		 *  送信可能コールバックルーチンを呼び出す．
-		 */
-		upd72001_irdy_snd(p_siopcb->exinf);
+	if ((p_siopcb->cr1 & CR1_SEND) != 0U) {
+		if (upd72001_putready(p_siopcb)) {
+			/*
+			 *  送信可能コールバックルーチンを呼び出す．
+			 */
+			upd72001_irdy_snd(p_siopcb->exinf);
+		}
 	}
 }
 

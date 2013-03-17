@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: cyclic.c 1358 2008-09-21 09:16:57Z ertl-hiro $
+ *  @(#) $Id: cyclic.c 2133 2011-06-26 03:14:51Z ertl-hiro $
  */
 
 /*
@@ -116,7 +116,8 @@ initialize_cyclic(void)
 	uint_t	i;
 	CYCCB	*p_cyccb;
 
-	for (p_cyccb = cyccb_table, i = 0; i < tnum_cyc; p_cyccb++, i++) {
+	for (i = 0; i < tnum_cyc; i++) {
+		p_cyccb = &(cyccb_table[i]);
 		p_cyccb->p_cycinib = &(cycinib_table[i]);
 		if ((p_cyccb->p_cycinib->cycatr & TA_STA) != 0U) {
 			p_cyccb->cycsta = true;

@@ -34,7 +34,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: test_lib.c 2067 2011-05-05 00:46:29Z ertl-hiro $
+ *  @(#) $Id: test_lib.c 2131 2011-06-26 01:46:33Z ertl-hiro $
  */
 
 /* 
@@ -48,7 +48,7 @@
 #include <log_output.h>
 #include "syssvc/syslog.h"
 #include "target_syssvc.h"
-#include "test_lib.h"
+#include <test_lib.h>
 
 /*
  *	チェックポイント
@@ -75,19 +75,19 @@ set_bit_func(BIT_FUNC bit_func)
 void
 syslog_flush(void)
 {
-	SYSLOG	syslog;
+	SYSLOG	logbuf;
 	ER_UINT	rercd;
 
 	/*
 	 *  ログバッファに記録されたログ情報を，低レベル出力機能を用いて出
 	 *  力する．
 	 */
-	while ((rercd = syslog_rea_log(&syslog)) >= 0) {
+	while ((rercd = syslog_rea_log(&logbuf)) >= 0) {
 		if (rercd > 0) {
 			syslog_lostmsg((uint_t) rercd, target_fput_log);
 		}
-		if (syslog.logtype >= LOG_TYPE_COMMENT) {
-			syslog_print(&syslog, target_fput_log);
+		if (logbuf.logtype >= LOG_TYPE_COMMENT) {
+			syslog_print(&logbuf, target_fput_log);
 			target_fput_log('\n');
 		}
 	}
@@ -103,7 +103,7 @@ test_finish(void)
 
 	SIL_LOC_INT();
 	syslog_flush();
-	ext_ker();
+	(void) ext_ker();
 
 	/* ここへ来ることはないはず */
 	SIL_UNL_INT();

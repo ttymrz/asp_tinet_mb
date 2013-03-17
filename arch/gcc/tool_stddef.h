@@ -4,7 +4,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -36,7 +36,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: tool_stddef.h 819 2008-03-18 12:58:50Z hiro $
+ *  @(#) $Id: tool_stddef.h 2243 2011-08-26 21:56:55Z ertl-hiro $
  */
 
 /*
@@ -50,9 +50,10 @@
  *  コンパイラの拡張機能のためのマクロ定義
  */
 #ifndef __cplusplus					/* C++にはinline がある */
-#if __STDC_VERSION__ < 199901L		/* C99にはinline がある */
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+									/* C99にはinline がある */
 #define inline	__inline__			/* インライン関数 */
-#endif /* __STDC_VERSION__ < 199901L */
+#endif /* !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L */
 #endif /* __cplusplus */
 
 #define Inline	static __inline__	/* インライン関数 */

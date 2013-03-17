@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: logtask.c 1111 2008-06-12 08:42:26Z ertl-hiro $
+ *  @(#) $Id: logtask.c 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -60,9 +60,9 @@ static ID	logtask_portid;
  *  シリアルインタフェースへの1文字出力
  */
 static void
-logtask_putc(char_t c)
+logtask_putc(char c)
 {
-	serial_wri_dat(logtask_portid, &c, 1);
+	(void) serial_wri_dat(logtask_portid, &c, 1);
 }
 
 /*
@@ -126,32 +126,32 @@ logtask_flush(uint_t count)
 void
 logtask_main(intptr_t exinf)
 {
-	SYSLOG	syslog;
-	uint_t	lost;
+	SYSLOG	logbuf;
+	uint_t	lostlog;
 	ER_UINT	rercd;
 
 	logtask_portid = (ID) exinf;
-	serial_opn_por(logtask_portid);
-	syslog_msk_log(LOG_UPTO(LOG_NOTICE), LOG_UPTO(LOG_EMERG));
+	(void) serial_opn_por(logtask_portid);
+	(void) syslog_msk_log(LOG_UPTO(LOG_NOTICE), LOG_UPTO(LOG_EMERG));
 	syslog_1(LOG_NOTICE, "System logging task is started on port %d.",
 													logtask_portid);
 	for (;;) {
-		lost = 0U;
-		while ((rercd = syslog_rea_log(&syslog)) >= 0) {
-			lost += (uint_t) rercd;
-			if (syslog.logtype >= LOG_TYPE_COMMENT) {
-				if (lost > 0U) {
-					syslog_lostmsg(lost, logtask_putc);
-					lost = 0U;
+		lostlog = 0U;
+		while ((rercd = syslog_rea_log(&logbuf)) >= 0) {
+			lostlog += (uint_t) rercd;
+			if (logbuf.logtype >= LOG_TYPE_COMMENT) {
+				if (lostlog > 0U) {
+					syslog_lostmsg(lostlog, logtask_putc);
+					lostlog = 0U;
 				}
-				syslog_print(&syslog, logtask_putc);
+				syslog_print(&logbuf, logtask_putc);
 				logtask_putc('\n');
 			}
 		}
-		if (lost > 0U) {
-			syslog_lostmsg(lost, logtask_putc);
+		if (lostlog > 0U) {
+			syslog_lostmsg(lostlog, logtask_putc);
 		}
-		dly_tsk(LOGTASK_INTERVAL);
+		(void) dly_tsk(LOGTASK_INTERVAL);
 	}
 }
 
@@ -161,8 +161,8 @@ logtask_main(intptr_t exinf)
 void
 logtask_terminate(intptr_t exinf)
 {
-	char_t	c;
-	SYSLOG	syslog;
+	char	c;
+	SYSLOG	logbuf;
 	bool_t	msgflg = false;
 	ER_UINT	rercd;
 
@@ -178,7 +178,7 @@ logtask_terminate(intptr_t exinf)
 	 *  ログバッファに記録されたログ情報を，低レベル出力機能を用いて出
 	 *  力する．
 	 */
-	while ((rercd = syslog_rea_log(&syslog)) >= 0) {
+	while ((rercd = syslog_rea_log(&logbuf)) >= 0) {
 		if (!msgflg) {
 			/*
 			 *  ログバッファに残ったログ情報であることを示す文字列を出
@@ -190,8 +190,8 @@ logtask_terminate(intptr_t exinf)
 		if (rercd > 0) {
 			syslog_lostmsg((uint_t) rercd, target_fput_log);
 		}
-		if (syslog.logtype >= LOG_TYPE_COMMENT) {
-			syslog_print(&syslog, target_fput_log);
+		if (logbuf.logtype >= LOG_TYPE_COMMENT) {
+			syslog_print(&logbuf, target_fput_log);
 			target_fput_log('\n');
 		}
 	}

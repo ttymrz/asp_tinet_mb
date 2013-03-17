@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: kernel.h 1959 2010-11-20 02:17:27Z ertl-hiro $
+ *  @(#) $Id: kernel.h 2396 2012-08-15 02:26:22Z ertl-hiro $
  */
 
 /*
@@ -469,8 +469,8 @@ extern bool_t	xsns_xpn(void *p_excinf) throw();
  */
 #define TKERNEL_MAKER	UINT_C(0x0118)	/* カーネルのメーカーコード */
 #define TKERNEL_PRID	UINT_C(0x0007)	/* カーネルの識別番号 */
-#define TKERNEL_SPVER	UINT_C(0xf513)	/* カーネル仕様のバージョン番号 */
-#define TKERNEL_PRVER	UINT_C(0x1070)	/* カーネルのバージョン番号 */
+#define TKERNEL_SPVER	UINT_C(0xf515)	/* カーネル仕様のバージョン番号 */
+#define TKERNEL_PRVER	UINT_C(0x1080)	/* カーネルのバージョン番号 */
 
 /*
  *  キューイング回数の最大値

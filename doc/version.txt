@@ -2,8 +2,8 @@
 		TOPPERS/ASPカーネル
 		変更履歴
 
-		対応バージョン: Release 1.7.0
-		最終更新: 2011年4月10日
+		対応バージョン: Release 1.8.0
+		最終更新: 2012年11月11日
 
 このドキュメントは，TOPPERS/ASPカーネルのRelease 1.0.0以降の変更履歴を，
 新しい方から順に記述したものである．
@@ -13,7 +13,7 @@
      Toyohashi Open Platform for Embedded Real-Time Systems/
      Advanced Standard Profile Kernel
 
- Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
+ Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
              Graduate School of Information Science, Nagoya Univ., JAPAN
  
  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -45,7 +45,83 @@
  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  の責任を負わない．
  
- $Id: version.txt 2061 2011-04-10 15:37:35Z ertl-hiro $
+ $Id: version.txt 2424 2012-11-11 08:23:22Z ertl-hiro $
+----------------------------------------------------------------------
+
+		TOPPERS/ASPカーネル
+		Release 1.7.0 から 1.8.0 への変更点
+
+○変更点のリスト
+
+・char_t型の廃止
+
+・SILのメモリ空間読出し関数に渡すポインタの属性の変更
+	- sil_r??_???に渡しポインタに，const属性を追加．
+
+・非タスクコンテキスト用のスタック領域のサイズチェックの追加
+	- DEF_ICSのistkszがターゲット定義の最小値（TARGET_MIN_ISTKSZ）より
+	  も小さい場合にE_PARエラーとする処理を追加．
+
+・vasyslog.cをlibraryディレクトリに移動
+
+・MISRA-C対応のためのコードの修正
+	- 文をマクロ定義している箇所をdo{}while(false)で囲む．
+	- コンマ演算子に使用を最小限に．
+	- 多重代入文をやめる．
+	- 符号無し整数定数にUをつける．
+	- 標準的な名前を変数名として使わないように修正．
+	- 返値を使わない関数呼出しを(void)にキャストする．
+
+・その他のバグフィックス
+	- ミューテックス機能拡張で，ref_tskがTTW_MTXを返す処理を追加．
+	- 動的生成機能拡張で，acre_isrのエラーコードを修正．
+	- 動的生成機能拡張で，オブジェクトコントロールブロックがない時に
+	  acre_yyyを呼んだ場合の問題を修正．
+	- kernel_check.tfでエラーメッセージの出力処理を修正．
+	- 拡張モジュールの追従ミスの修正．
+	- TOPPERS_SUPPORT_OVRTIMをTOPPERS_SUPPORT_OVRHDRに修正．
+
+・サンプルのMakefileの修正
+	- カーネルライブラリを別ディレクトリで作成する時に，カーネルライブ
+	  ラリが更新されたら，オブジェクトファイルを再構築するように修正．
+	- CFG2_OUTをCFG2_OUT_SRCSにリネーム．
+	- LDFLAGSは，cfg1_out.cのリンク時には適用されないように修正．
+	- log_output.o，vasyslog.o，t_perror.o，strerror.oを，SYS_COBJSから
+	  APPL_COBJSに移動．
+
+・その他の修正
+	- semaphore.h等からwait.hをインクルードするように修正．
+	- TOPPERS_EMPTY_LABELのデフォルトの定義をkernel_int.hに移動．
+	- __STDC_VERSION__が定義されていない場合に対応．
+	- test_lib.hに多重インクルードの防止コードを追加．
+	- ユーティリティプログラムを新しいperlに対応するように修正．
+	- gentestを拡張（CPU例外ハンドラの生成，GOTOに対応など）．
+	- configureにオプションを追加．
+	- test_tex1にテストケース1件を追加．
+
+・ドキュメントの充実，コメントの修正
+
+・バージョン番号の更新
+	- カーネルのバージョン番号を更新．
+
+○ターゲット依存部の要修正箇所（1.7.0 → 1.8.0）
+
+(1) char_t型をchar型に修正
+
+(2) TARGET_MIN_ISTKSZの定義を追加（オプション）
+	- 非タスクコンテキストのスタックサイズの最小値をチェックする場合に
+	  は，最小値をTARGET_MIN_ISTKSZに定義する．
+
+(3) CFG2_OUTをCFG2_OUT_SRCSにリネーム
+	- Makefileのターゲット依存部でCFG2_OUTを定義している場合には，
+	  CFG2_OUT_SRCSにリネームする．
+
+(4) CFG1_OUT_LDFLAGSの定義
+	- Makefileのターゲット依存部で定義したLDFLAGSは，cfg1_out.cをリンク
+	  する際には適用されないように変更したため，LDFLAGSに定義したオプショ
+	  ンで，cfg1_out.cをリンクする際にも必要なものは，CFG1_OUT_LDFLAGS
+	  にも定義するように修正する．
+
 ----------------------------------------------------------------------
 
 		TOPPERS/ASPカーネル
@@ -63,7 +139,7 @@
 ・データキューのコードの修正
 	- データ管理ブロックの導入（他のオブジェクトの実装と整合された）．
 
-・SILのメモリ空間アクセス関数に渡すポインタの方の変更
+・SILのメモリ空間アクセス関数に渡すポインタの型の変更
 	- void *を渡していたところを，サイズにあわせて，uint8_t *などに変更．
 
 ・動的生成機能拡張パッケージにあわせた修正

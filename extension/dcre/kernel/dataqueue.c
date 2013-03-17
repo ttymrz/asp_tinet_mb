@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: dataqueue.c 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: dataqueue.c 2415 2012-09-06 03:13:06Z ertl-hiro $
  */
 
 /*
@@ -186,7 +186,8 @@ initialize_dataqueue(void)
 	DTQCB	*p_dtqcb;
 	DTQINIB	*p_dtqinib;
 
-	for (p_dtqcb = dtqcb_table, i = 0; i < tnum_sdtq; p_dtqcb++, i++) {
+	for (i = 0; i < tnum_sdtq; i++) {
+		p_dtqcb = &(dtqcb_table[i]);
 		queue_initialize(&(p_dtqcb->swait_queue));
 		p_dtqcb->p_dtqinib = &(dtqinib_table[i]);
 		queue_initialize(&(p_dtqcb->rwait_queue));
@@ -195,7 +196,8 @@ initialize_dataqueue(void)
 		p_dtqcb->tail = 0U;
 	}
 	queue_initialize(&free_dtqcb);
-	for (j = 0; i < tnum_dtq; p_dtqcb++, i++, j++) {
+	for (j = 0; i < tnum_dtq; i++, j++) {
+		p_dtqcb = &(dtqcb_table[i]);
 		p_dtqinib = &(adtqinib_table[j]);
 		p_dtqinib->dtqatr = TA_NOEXS;
 		p_dtqcb->p_dtqinib = ((const DTQINIB *) p_dtqinib);
@@ -226,7 +228,7 @@ acre_dtq(const T_CDTQ *pk_cdtq)
 	p_dtqmb = pk_cdtq->dtqmb;
 
 	t_lock_cpu();
-	if (queue_empty(&free_dtqcb)) {
+	if (tnum_dtq == 0 || queue_empty(&free_dtqcb)) {
 		ercd = E_NOID;
 	}
 	else {

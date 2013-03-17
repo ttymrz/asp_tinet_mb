@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  *
- *  @(#) $Id: sample1.h 1968 2010-11-20 11:00:07Z ertl-hiro $
+ *  $Id: sample1.h 2416 2012-09-07 08:06:20Z ertl-hiro $
  */
 
 /*
@@ -56,7 +56,7 @@
 #define MAIN_PRIORITY	5		/* メインタスクの優先度 */
 								/* HIGH_PRIORITYより高くすること */
 
-#define HIGH_PRIORITY	9		/* 並列に実行されるタスクの優先度 */
+#define HIGH_PRIORITY	9		/* 並行実行されるタスクの優先度 */
 #define MID_PRIORITY	10
 #define LOW_PRIORITY	11
 

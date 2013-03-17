@@ -1,0 +1,6 @@
+E_PACKAGE aes_s6mb_lx9_g_gcc
+VERSION %date
+
+INCLUDE MANIFEST
+INCLUDE ../../MANIFEST
+INCLUDE ../../arch/microblaze_gcc/MANIFEST

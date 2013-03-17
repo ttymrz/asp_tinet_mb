@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2007 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: kernel_int.h 525 2007-09-11 18:01:00Z hiro $
+ *  @(#) $Id: kernel_int.h 2396 2012-08-15 02:26:22Z ertl-hiro $
  */
 
 /*
@@ -61,8 +61,8 @@
 #include "dataqueue.h"
 #include "pridataq.h"
 #include "mailbox.h"
-#include "mempfix.h"
 #include "mutex.h"
+#include "mempfix.h"
 #include "cyclic.h"
 #include "alarm.h"
 #include "interrupt.h"
@@ -73,5 +73,12 @@
  *  リネームしたシンボルを元に戻すためのヘッダファイル
  */
 #include "kernel_unrename.h"
+
+/*
+ *  内容が空の配列を生成するためのマクロ
+ */
+#ifndef TOPPERS_EMPTY_LABEL
+#define TOPPERS_EMPTY_LABEL(type, var)		type var[0]
+#endif
 
 #endif /* TOPPERS_KERNEL_INT_H */

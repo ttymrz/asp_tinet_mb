@@ -3,7 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems/
  *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2005-2009 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +35,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: mutex.c 1694 2010-01-01 15:59:09Z ertl-hiro $
+ *  @(#) $Id: mutex.c 2136 2011-06-26 03:35:48Z ertl-hiro $
  */
 
 /*
@@ -150,7 +150,8 @@ initialize_mutex(void)
 	mtxhook_scan_ceilmtx = mutex_scan_ceilmtx;
 	mtxhook_release_all = mutex_release_all;
 
-	for (p_mtxcb = mtxcb_table, i = 0; i < tnum_mtx; p_mtxcb++, i++) {
+	for (i = 0; i < tnum_mtx; i++) {
+		p_mtxcb = &(mtxcb_table[i]);
 		queue_initialize(&(p_mtxcb->wait_queue));
 		p_mtxcb->p_mtxinib = &(mtxinib_table[i]);
 		p_mtxcb->p_loctsk = NULL;

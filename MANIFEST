@@ -1,5 +1,5 @@
 PACKAGE asp
-VERSION 1.7.0
+VERSION 1.8.0
 
 configure
 MANIFEST
@@ -76,6 +76,7 @@ library/log_output.c
 library/strerror.c
 library/t_perror.c
 library/test_lib.c
+library/vasyslog.c
 
 sample/Makefile
 sample/sample1.c
@@ -94,7 +95,6 @@ syssvc/serial.h
 syssvc/syslog.c
 syssvc/syslog.cfg
 syssvc/syslog.h
-syssvc/vasyslog.c
 
 utils/applyrename
 utils/genoffset

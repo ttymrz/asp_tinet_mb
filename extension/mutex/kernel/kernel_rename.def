@@ -72,10 +72,6 @@ receive_pridata
 # mailbox.c
 initialize_mailbox
 
-# mempfix.c
-initialize_mempfix
-get_mpf_block
-
 # mutex.c
 mtxhook_check_ceilpri
 mtxhook_scan_ceilmtx
@@ -86,6 +82,10 @@ mutex_scan_ceilmtx
 mutex_calc_priority
 mutex_release
 mutex_release_all
+
+# mempfix.c
+initialize_mempfix
+get_mpf_block
 
 # cyclic.c
 initialize_cyclic
@@ -116,17 +116,17 @@ tmax_flgid
 flginib_table
 flgcb_table
 tmax_dtqid
-dtqcb_table
 dtqinib_table
+dtqcb_table
 tmax_pdqid
-pdqcb_table
 pdqinib_table
+pdqcb_table
 tmax_mbxid
-mbxcb_table
 mbxinib_table
+mbxcb_table
 tmax_mtxid
-mtxcb_table
 mtxinib_table
+mtxcb_table
 tmax_mpfid
 mpfinib_table
 mpfcb_table

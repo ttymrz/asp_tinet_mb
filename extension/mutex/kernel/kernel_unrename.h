@@ -97,12 +97,6 @@
 #undef initialize_mailbox
 
 /*
- *  mempfix.c
- */
-#undef initialize_mempfix
-#undef get_mpf_block
-
-/*
  *  mutex.c
  */
 #undef mtxhook_check_ceilpri
@@ -114,6 +108,12 @@
 #undef mutex_calc_priority
 #undef mutex_release
 #undef mutex_release_all
+
+/*
+ *  mempfix.c
+ */
+#undef initialize_mempfix
+#undef get_mpf_block
 
 /*
  *  cyclic.c
@@ -154,17 +154,17 @@
 #undef flginib_table
 #undef flgcb_table
 #undef tmax_dtqid
-#undef dtqcb_table
 #undef dtqinib_table
+#undef dtqcb_table
 #undef tmax_pdqid
-#undef pdqcb_table
 #undef pdqinib_table
+#undef pdqcb_table
 #undef tmax_mbxid
-#undef mbxcb_table
 #undef mbxinib_table
+#undef mbxcb_table
 #undef tmax_mtxid
-#undef mtxcb_table
 #undef mtxinib_table
+#undef mtxcb_table
 #undef tmax_mpfid
 #undef mpfinib_table
 #undef mpfcb_table
@@ -281,12 +281,6 @@
 #undef _initialize_mailbox
 
 /*
- *  mempfix.c
- */
-#undef _initialize_mempfix
-#undef _get_mpf_block
-
-/*
  *  mutex.c
  */
 #undef _mtxhook_check_ceilpri
@@ -298,6 +292,12 @@
 #undef _mutex_calc_priority
 #undef _mutex_release
 #undef _mutex_release_all
+
+/*
+ *  mempfix.c
+ */
+#undef _initialize_mempfix
+#undef _get_mpf_block
 
 /*
  *  cyclic.c
@@ -338,17 +338,17 @@
 #undef _flginib_table
 #undef _flgcb_table
 #undef _tmax_dtqid
-#undef _dtqcb_table
 #undef _dtqinib_table
+#undef _dtqcb_table
 #undef _tmax_pdqid
-#undef _pdqcb_table
 #undef _pdqinib_table
+#undef _pdqcb_table
 #undef _tmax_mbxid
-#undef _mbxcb_table
 #undef _mbxinib_table
+#undef _mbxcb_table
 #undef _tmax_mtxid
-#undef _mtxcb_table
 #undef _mtxinib_table
+#undef _mtxcb_table
 #undef _tmax_mpfid
 #undef _mpfinib_table
 #undef _mpfcb_table

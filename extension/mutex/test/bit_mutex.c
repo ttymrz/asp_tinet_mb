@@ -3,7 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems/
  *      High Reliable system Profile Kernel
  * 
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -35,7 +35,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: bit_mutex.c 762 2008-03-07 23:51:41Z hiro $
+ *  @(#) $Id: bit_mutex.c 2136 2011-06-26 03:35:48Z ertl-hiro $
  */
 
 /*
@@ -125,13 +125,13 @@ bit_mutex_task(ID tskid)
 	TCB			*p_tcb;
 	MTXCB		*p_mtxcb;
 	QUEUE		*p_queue, *p_next;
-	uint_t		priority;
+	uint_t		pri;
 
 	if (!(TMIN_TSKID <= (tskid) && (tskid) <= tmax_tskid)) {
 		return(E_ID);
 	}
 	p_tcb = get_tcb(tskid);
-	priority = p_tcb->bpriority;
+	pri = p_tcb->bpriority;
 
 	/*
 	 *  タスクがロックしているミューテックスのキューの検査
@@ -157,8 +157,8 @@ bit_mutex_task(ID tskid)
 		 *  現在優先度の計算
 		 */
 		if (MTXPROTO(p_mtxcb)) {
-			if (p_mtxcb->p_mtxinib->ceilpri < priority) {
-				priority = p_mtxcb->p_mtxinib->ceilpri;
+			if (p_mtxcb->p_mtxinib->ceilpri < pri) {
+				pri = p_mtxcb->p_mtxinib->ceilpri;
 			}
 		}
 
@@ -175,7 +175,7 @@ bit_mutex_task(ID tskid)
 	/*
 	 *  現在優先度の検査
 	 */
-	if (p_tcb->priority != p_tcb->priority) {
+	if (p_tcb->priority != pri) {
 		return(E_SYS_LINENO);
 	}
 
@@ -203,7 +203,7 @@ bit_mutex_mutex(ID mtxid)
 	MTXCB		*p_mtxcb;
 	TCB			*p_tcb;
 	QUEUE		*p_queue, *p_next;
-	uint_t		priority;
+	uint_t		pri;
 
 	if (!(TMIN_MTXID <= (mtxid) && (mtxid) <= tmax_mtxid)) {
 		return(E_ID);
@@ -224,7 +224,7 @@ bit_mutex_mutex(ID mtxid)
 	if (p_queue->p_prev != &(p_mtxcb->wait_queue)) {
 		return(E_SYS_LINENO);
 	}
-	priority = TMIN_TPRI;
+	pri = TMIN_TPRI;
 	while (p_queue != &(p_mtxcb->wait_queue)) {
 		p_tcb = (TCB *) p_queue;
 		if (!VALID_TCB(p_tcb)) {
@@ -235,11 +235,11 @@ bit_mutex_mutex(ID mtxid)
 		 *  キューがタスク優先度順になっているかの検査
 		 */
 		if (MTXPROTO(p_mtxcb) != TA_NULL) {
-			if (p_tcb->priority < priority) {
+			if (p_tcb->priority < pri) {
 				return(E_SYS_LINENO);
 			}
 		}
-		priority = p_tcb->priority;
+		pri = p_tcb->priority;
 
 		/*
 		 *  タスク状態の検査

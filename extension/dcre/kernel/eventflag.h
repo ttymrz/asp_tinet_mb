@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: eventflag.h 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: eventflag.h 2366 2012-05-06 09:22:22Z ertl-hiro $
  */
 
 /*
@@ -47,7 +47,7 @@
 #ifndef TOPPERS_EVENTFLAG_H
 #define TOPPERS_EVENTFLAG_H
 
-#include <queue.h>
+#include "wait.h"
 
 /*
  *  イベントフラグ初期化ブロック

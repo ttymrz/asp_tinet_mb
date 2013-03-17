@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: pridataq.c 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: pridataq.c 2415 2012-09-06 03:13:06Z ertl-hiro $
  */
 
 /*
@@ -171,7 +171,8 @@ initialize_pridataq(void)
 	PDQCB	*p_pdqcb;
 	PDQINIB	*p_pdqinib;
 
-	for (p_pdqcb = pdqcb_table, i = 0; i < tnum_spdq; p_pdqcb++, i++) {
+	for (i = 0; i < tnum_spdq; i++) {
+		p_pdqcb = &(pdqcb_table[i]);
 		queue_initialize(&(p_pdqcb->swait_queue));
 		p_pdqcb->p_pdqinib = &(pdqinib_table[i]);
 		queue_initialize(&(p_pdqcb->rwait_queue));
@@ -181,7 +182,8 @@ initialize_pridataq(void)
 		p_pdqcb->p_freelist = NULL;
 	}
 	queue_initialize(&free_pdqcb);
-	for (j = 0; i < tnum_pdq; p_pdqcb++, i++, j++) {
+	for (j = 0; i < tnum_pdq; i++, j++) {
+		p_pdqcb = &(pdqcb_table[i]);
 		p_pdqinib = &(apdqinib_table[j]);
 		p_pdqinib->pdqatr = TA_NOEXS;
 		p_pdqcb->p_pdqinib = ((const PDQINIB *) p_pdqinib);
@@ -213,7 +215,7 @@ acre_pdq(const T_CPDQ *pk_cpdq)
 	p_pdqmb = pk_cpdq->pdqmb;
 
 	t_lock_cpu();
-	if (queue_empty(&free_pdqcb)) {
+	if (tnum_pdq == 0 || queue_empty(&free_pdqcb)) {
 		ercd = E_NOID;
 	}
 	else {

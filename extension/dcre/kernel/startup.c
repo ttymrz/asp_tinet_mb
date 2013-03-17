@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: startup.c 1966 2010-11-20 07:23:56Z ertl-hiro $
+ *  @(#) $Id: startup.c 2366 2012-05-06 09:22:22Z ertl-hiro $
  */
 
 /*
@@ -143,6 +143,12 @@ ext_ker(void)
 	 *  非タスクコンテキストに切り換えて，exit_kernelを呼び出す．
 	 */
 	call_exit_kernel();
+
+	/*
+	 *  コンパイラの警告対策（ここへ来ることはないはず）
+	 */
+	SIL_UNL_INT();
+	LOG_EXT_KER_LEAVE(E_SYS);
 	return(E_SYS);
 }
 

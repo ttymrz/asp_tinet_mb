@@ -111,14 +111,14 @@ tmax_flgid
 flginib_table
 flgcb_table
 tmax_dtqid
-dtqcb_table
 dtqinib_table
+dtqcb_table
 tmax_pdqid
-pdqcb_table
 pdqinib_table
+pdqcb_table
 tmax_mbxid
-mbxcb_table
 mbxinib_table
+mbxcb_table
 tmax_mpfid
 mpfinib_table
 mpfcb_table

@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2008 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2011 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: target_serial.h 888 2008-04-11 11:16:50Z hiro $
+ *  @(#) $Id: target_serial.h 2246 2011-08-26 22:39:15Z ertl-hiro $
  */
 
 /*
@@ -82,7 +82,7 @@ extern void		sio_isr(intptr_t exinf);
 /*
  *  シリアルI/Oポートへの文字送信
  */
-extern bool_t	sio_snd_chr(SIOPCB *siopcb, char_t c);
+extern bool_t	sio_snd_chr(SIOPCB *siopcb, char c);
 
 /*
  *  シリアルI/Oポートからの文字受信

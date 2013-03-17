@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2004-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  @(#) $Id: banner.c 2042 2011-03-06 11:26:14Z ertl-hiro $
+ *  @(#) $Id: banner.c 2339 2012-04-05 08:16:23Z ertl-hiro $
  */
 
 /*
@@ -47,6 +47,7 @@
 #include <kernel.h>
 #include <t_syslog.h>
 #include "target_syssvc.h"
+#include "banner.h"
 
 #ifndef TARGET_COPYRIGHT
 #define TARGET_COPYRIGHT
@@ -57,7 +58,7 @@ static const char banner[] = "\n"
 " (" __DATE__ ", " __TIME__ ")\n"
 "Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory\n"
 "                            Toyohashi Univ. of Technology, JAPAN\n"
-"Copyright (C) 2004-2011 by Embedded and Real-Time Systems Laboratory\n"
+"Copyright (C) 2004-2012 by Embedded and Real-Time Systems Laboratory\n"
 "            Graduate School of Information Science, Nagoya Univ., JAPAN\n"
 TARGET_COPYRIGHT;
 

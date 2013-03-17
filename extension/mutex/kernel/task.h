@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2010 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2012 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,7 +37,7 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: task.h 2018 2010-12-31 13:43:05Z ertl-hiro $
+ *  $Id: task.h 2370 2012-05-06 10:06:50Z ertl-hiro $
  */
 
 /*
@@ -243,14 +243,15 @@ typedef struct task_control_block {
 #else /* UINT8_MAX */
 	BIT_FIELD_UINT	tstat : 8;		/* タスク状態（内部表現）*/
 #endif /* UINT8_MAX */
-	BIT_FIELD_UINT	bpriority : TBIT_TCB_PRIORITY;
-									/* ベース優先度（内部表現）*/
 #if defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8)
+	uint8_t			bpriority;		/* ベース優先度（内部表現）*/
 	uint8_t			priority;		/* 現在の優先度（内部表現）*/
 #else /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
+	BIT_FIELD_UINT	bpriority : TBIT_TCB_PRIORITY;
+									/* ベース優先度（内部表現）*/
 	BIT_FIELD_UINT	priority : TBIT_TCB_PRIORITY;
 									/* 現在の優先度（内部表現）*/
-#endif  /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
+#endif /* defined(UINT8_MAX) && (TBIT_TCB_PRIORITY == 8) */
 	BIT_FIELD_BOOL	actque : 1;		/* 起動要求キューイング */
 	BIT_FIELD_BOOL	wupque : 1;		/* 起床要求キューイング */
 	BIT_FIELD_BOOL	enatex : 1;		/* タスク例外処理許可状態 */

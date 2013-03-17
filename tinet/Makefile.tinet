@@ -364,7 +364,7 @@ $(TINET_CFG_OUT): tinet_cfg1_out.o $(HIDDEN_OBJS)
 				-T $(SRCDIR)/tinet/tinet.tf $(TINET_CFG_TABS) $(TINET_CFG)
 	rm -f $(TINET_CFG1_OUT) tinet_cfg1_out.syms tinet_cfg1_out.srec
 
-kernel_cfg.timestamp: $(TINET_CFG_OUT)
+cfg1_out.c: $(TINET_CFG_OUT)
 
 endif
 

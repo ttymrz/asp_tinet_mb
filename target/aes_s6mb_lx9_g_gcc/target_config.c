@@ -4,7 +4,7 @@
  *      Advanced Standard Profile Kernel
  * 
  *  Copyright (C) 2002-2008 by Y.D.K Co.,Ltd
- *  Copyright (C) 2012 by Tetsuya Morizumi
+ *  Copyright (C) 2012-2013 by Tetsuya Morizumi
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
@@ -80,7 +80,7 @@ target_exit(void)
  *  ターゲット依存の文字出力
  */
 void
-target_fput_log(char_t c)
+target_fput_log(char c)
 {
 	if (c == '\n') {
 		microbalze_xuartl_putc('\r');

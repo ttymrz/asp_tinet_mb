@@ -1,11 +1,11 @@
 #! /usr/bin/perl
 #
 #  TOPPERS Software
-#      Toyohashi Open Platform for Embedded Real-Time Systems/
+#      Toyohashi Open Platform for Embedded Real-Time Systems
 # 
 #  Copyright (C) 2001-2003 by Embedded and Real-Time Systems Laboratory
 #                              Toyohashi Univ. of Technology, JAPAN
-#  Copyright (C) 2006-2009 by Embedded and Real-Time Systems Laboratory
+#  Copyright (C) 2006-2012 by Embedded and Real-Time Systems Laboratory
 #              Graduate School of Information Science, Nagoya Univ., JAPAN
 # 
 #  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,10 +37,10 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: configure 1733 2010-02-03 03:50:52Z ertl-hiro $
+#  @(#) $Id: configure 2424 2012-11-11 08:23:22Z ertl-hiro $
 # 
 
-require "getopt.pl";
+use Getopt::Std;
 
 #  オプションの定義
 #
@@ -48,6 +48,8 @@ require "getopt.pl";
 #  -A <applname>		アプリケーションプログラム名（デフォルトはsample1）
 #  -a <appldir>			アプリケーションのディレクトリ名
 #  -U <applobjs>		他のアプリケーションプログラムファイル
+#						（.oファイル名で指定．複数指定可）
+#  -S <syssvcobjs>		システムサービスのプログラムファイル
 #						（.oファイル名で指定．複数指定可）
 #  -L <kernel_lib>		カーネルライブラリ（libkernel.a）のディレクトリ名
 #						（省略した場合，カーネルライブラリもmakeする）
@@ -61,6 +63,10 @@ require "getopt.pl";
 #						の指定
 #  -p <perl>			perlのパス名（明示的に指定する場合）
 #  -g <cfg>				コンフィギュレータ（cfg）のパス名
+#  -P <num>				プロセッサ数（マルチプロセッサ対応カーネルの場合）
+#  -o <options>			共通コンパイルオプション（COPTSに追加）
+#  -O <options>			共通シンボル定義オプション（CDEFSに追加）
+#  -k <options>			共通リンカオプション（LDFLAGS等に追加）
 
 #  使用例(1)
 #
@@ -74,7 +80,7 @@ require "getopt.pl";
 #
 #  オプションの処理
 #
-do Getopt("TAaULDltmdpg");
+getopt("TAaUSLDltmdpgPoOk");
 
 #
 #  変数の初期化
@@ -84,22 +90,23 @@ $target = $opt_T;
 $applname = $opt_A ? $opt_A : "sample1";
 $appldir = $opt_a ? $opt_a : "";
 $applobjs = $opt_U ? $opt_U : "";
+$syssvcobjs = $opt_S ? $opt_S : "";
 $kernel_lib = $opt_L ? $opt_L : "";
 $kernel_funcobjs = $opt_f ? "true" : "";
 $srclang = $opt_l ? $opt_l : "c";
 $makefile = $opt_m ? $opt_m : "Makefile";
 $dbgenv = $opt_d ? "TOPPERS_".$opt_d : "";
 $enable_trace = $opt_r ? "true" : "";
+$prc_num = $opt_P ? $opt_P : "";
+$copts = $opt_o ? $opt_o : "";
+$cdefs = $opt_O ? $opt_O : "";
+$ldflags = $opt_k ? $opt_k : "";
 
 #
 #  オブジェクトファイル名の拡張子を返す
 #
 sub get_objext {
-	local(@uname);
-
-	use POSIX;
-	@uname = do uname();
-	if ($uname[0] =~ /^cygwin/i) {
+	if ($^O eq 'cygwin') {
 		return("exe");
 	}
 	else {
@@ -111,8 +118,8 @@ sub get_objext {
 #  プログラムの場所を検索する
 #
 sub get_path {
-	local($progname, @pathlist) = @_;
-	local($path);
+	my($progname, @pathlist) = @_;
+	my($path);
 
 	foreach $path (@pathlist) {
 		if (-x $path."/".$progname) {
@@ -126,8 +133,8 @@ sub get_path {
 #  ファイルを変換する
 #
 sub convert {
-	local($infile, $outfile) = @_;
-	local($line, $varname, $varval);
+	my($infile, $outfile) = @_;
+	my($line);
 
 	print STDERR "configure: Generating $outfile from $infile.\n";
 	if (-f $outfile) {
@@ -160,32 +167,18 @@ sub convert {
 #  サンプルを見つけてファイルを生成する
 #
 sub generate {
-	local($file, $mandatory) = @_;
-	local($path);
+	my($file, $mandatory) = @_;
+	my($path);
 
-	if ($sys) {
-		$path = $templatedir."/".$file.".".$cpu."-".$sys;
-		if (-f $path) {
-			do convert($path, $file);
-			return;
-		}
-
-		$path = $templatedir."/".$file.".".$sys;
-		if (-f $path) {
-			do convert($path, $file);
-			return;
-		}
-	}	
-
-	$path = $templatedir."/".$file.".".$cpu;
+	$path = $templatedir."/".$file.".".$target;
 	if (-f $path) {
-		do convert($path, $file);
+		convert($path, $file);
 		return;
 	}	
 
 	$path = $templatedir."/".$file;
 	if ($mandatory || -f $path) {
-		do convert($path, $file);
+		convert($path, $file);
 	}	
 }
 
@@ -209,7 +202,7 @@ else {
 	$srcabsdir = $srcdir = $pwd;
 }
 
-$perl = $opt_p ? $opt_p : do get_path("perl", ("/usr/local/bin", "/usr/bin"));
+$perl = $opt_p ? $opt_p : get_path("perl", ("/usr/local/bin", "/usr/bin"));
 $cfg = $opt_g ? $opt_g : "\$(SRCDIR)/cfg/cfg/cfg";
 $cfgfile = $opt_g ? $opt_g : $srcdir."/cfg/cfg/cfg";
 $templatedir = $opt_t ? $opt_t : $srcdir."/sample";
@@ -220,7 +213,7 @@ $templatedir = $opt_t ? $opt_t : $srcdir."/sample";
 unless ($opt_T) {
 	print STDERR "configure: -T option is mandatory\n";
 	print STDERR "Installed targets are:\n";
-	foreach $targetname (<$srcdir/target/[a-zA-Z1-9]*>) {
+	foreach $targetname (<$srcdir/target/[a-zA-Z0-9]*>) {
 		$targetname =~ s|$srcdir/target/||;
 		print STDERR "\t$targetname\n";
 	}
@@ -235,6 +228,7 @@ $vartable{"TARGET"} = $target;
 $vartable{"APPLNAME"} = $applname;
 $vartable{"APPLDIR"} = $appldir;
 $vartable{"APPLOBJS"} = $applobjs;
+$vartable{"SYSSVCOBJS"} = $syssvcobjs;
 $vartable{"KERNEL_LIB"} = $kernel_lib;
 $vartable{"KERNEL_FUNCOBJS"} = $kernel_funcobjs;
 $vartable{"SRCDIR"} = $srcdir;
@@ -244,8 +238,12 @@ $vartable{"DBGENV"} = $dbgenv;
 $vartable{"ENABLE_TRACE"} = $enable_trace;
 $vartable{"PERL"} = $perl;
 $vartable{"CFG"} = $cfg;
-$objext = do get_objext();
+$objext = get_objext();
 $vartable{"OBJEXT"} = $objext;
+$vartable{"PRC_NUM"} = $prc_num;
+$vartable{"COPTS"} = $copts;
+$vartable{"CDEFS"} = $cdefs;
+$vartable{"LDFLAGS"} = $ldflags;
 
 #
 #  ターゲットディレクトリのチェック
@@ -260,16 +258,16 @@ if (! -d $srcdir."/target/".$target) {
 #  Makefile とアプリケーションファイルの生成
 #
 
-do generate($makefile, 1);
-do generate($applname.".c", 0);
-do generate($applname.".cpp", 0);
-do generate($applname.".h", 0);
-do generate($applname.".cfg", 0);
+generate($makefile, 1);
+generate($applname.".c", 0);
+generate($applname.".cpp", 0);
+generate($applname.".h", 0);
+generate($applname.".cfg", 0);
 
 #
 #  cfg ができているかのチェック
 #
 
-if (!(-x ($objext == "" ? $cfgfile : $cfgfile.".".$objext))) {
+if (!(-x ($objext eq "" ? $cfgfile : $cfgfile.".".$objext))) {
 	print STDERR "Executable file of the configurator (cfg) is not found.\n";
 }

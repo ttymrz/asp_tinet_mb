@@ -37,7 +37,7 @@
 #  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
 #  の責任を負わない．
 # 
-#  @(#) $Id: Makefile.kernel 1966 2010-11-20 07:23:56Z ertl-hiro $
+#  @(#) $Id: Makefile.kernel 2414 2012-09-05 21:32:05Z ertl-hiro $
 # 
 
 #
@@ -96,8 +96,8 @@ pridataq = pdqini.o pdqenq.o pdqdeq.o pdqsnd.o pdqrcv.o \
 mailbox = mbxini.o acre_mbx.o del_mbx.o snd_mbx.o rcv_mbx.o \
 		prcv_mbx.o trcv_mbx.o ini_mbx.o ref_mbx.o
 
-mempfix = mpfini.o mpfget.o acre_mpf.o del_mpf.o get_mpf.o\
-		 pget_mpf.o tget_mpf.o rel_mpf.o ini_mpf.o ref_mpf.o
+mempfix = mpfini.o mpfget.o acre_mpf.o del_mpf.o get_mpf.o \
+		pget_mpf.o tget_mpf.o rel_mpf.o ini_mpf.o ref_mpf.o
 
 time_manage = get_tim.o get_utm.o
 

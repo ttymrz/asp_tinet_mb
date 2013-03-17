@@ -1,5 +1,5 @@
 PACKAGE asp_arch_microblaze_gcc
-VERSION 1.7.0
+VERSION 1.8.0
 
 MANIFEST
 Makefile.prc
@@ -31,5 +31,3 @@ xps_timer.h
 xps_uartl.c
 xps_uartl.cfg
 xps_uartl.h
-
-INCLUDE ../../target/aes_s6mb_lx9_g_gcc/MANIFEST
