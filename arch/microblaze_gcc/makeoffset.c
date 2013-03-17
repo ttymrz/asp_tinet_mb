@@ -3,6 +3,7 @@
  *      Toyohashi Open Platform for Embedded Real-Time Systems
  * 
  *  Copyright (C) 2002-2008 by Y.D.K Co.,Ltd
+ *  Copyright (C) 2012-2013 by Tetsuya Morizumi
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
