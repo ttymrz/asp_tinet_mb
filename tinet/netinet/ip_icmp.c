@@ -4,7 +4,7 @@
  *  Copyright (C) 2001-2009 by Dep. of Computer Science and Engineering
  *                   Tomakomai National College of Technology, JAPAN
  *
- *  上記著作権者は，以下の (1)〜(4) の条件か，Free Software Foundation 
+ *  上記著作権者は，以下の (1)~(4) の条件か，Free Software Foundation 
  *  によって公表されている GNU General Public License の Version 2 に記
  *  述されている条件を満たす場合に限り，本ソフトウェア（本ソフトウェア
  *  を改変したものを含む．以下同じ）を使用・複製・改変・再配布（以下，
@@ -366,6 +366,7 @@ icmp_error (uint8_t code, T_NET_BUF *input)
 	T_IP4_HDR	*ip4h;
 	T_ICMP4_HDR	*icmp4h;
 	T_NET_BUF	*output;
+    T_IN4_ADDR  addr;
 	uint_t		len, ip4hl, align;
 
 	ip4h  = GET_IP4_HDR(input);
@@ -377,8 +378,9 @@ icmp_error (uint8_t code, T_NET_BUF *input)
 	else
 		len = 8;
 	
+    addr = ntohl(ip4h->src);
 	if (in4_get_datagram(&output, (uint_t)(ICMP4_HDR_SIZE + ip4hl + len), 0,
-	                     &ip4h->src, NULL, IPPROTO_ICMP, IP4_DEFTTL, 
+	                     &addr, NULL, IPPROTO_ICMP, IP4_DEFTTL, 
 	                     NBA_SEARCH_ASCENT, TMO_ICMP_OUTPUT) != E_OK)
 		return;
 
