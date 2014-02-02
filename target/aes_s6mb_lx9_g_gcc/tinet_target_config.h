@@ -3,6 +3,7 @@
  * 
  *  Copyright (C) 2001-2009 by Dep. of Computer Science and Engineering
  *                   Tomakomai National College of Technology, JAPAN
+ *  Copyright (C) 2013-2014 by Tetsuya Morizumi
  *
  *  上記著作権者は，以下の (1)〜(4) の条件か，Free Software Foundation 
  *  によって公表されている GNU General Public License の Version 2 に記
@@ -80,7 +81,7 @@
 
 /* IPv4 に関する定義 */
 
-//#define IP4_CFG_FRAGMENT              /* データグラムの分割・再構成行う場合はコメントを外す。 */
+#define IP4_CFG_FRAGMENT                /* データグラムの分割・再構成行う場合はコメントを外す。 */
 #define NUM_IP4_FRAG_QUEUE      2       /* データグラム再構成キューサイズ                       */
 #define IP4_CFG_FRAG_REASSM_SIZE        4096    /* IPv4 再構成バッファサイズ                    */
 

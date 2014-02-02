@@ -78,7 +78,7 @@
  *  TINET のバージョン情報
  */
 
-#define TINET_PRVER		UINT_C(0x1052)	/* TINET のバージョン番号 */
+#define TINET_PRVER		UINT_C(0x1053)	/* TINET のバージョン番号 */
 
 /*
  *  インターネットシステムの定義、RFC790 参照

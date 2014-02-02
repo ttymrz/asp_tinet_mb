@@ -1,4 +1,4 @@
-                      TINET 変更メモ  [2011/5/6]
+                      TINET 変更メモ  [2013/8/5]
 
 1.  リリース 1.0 から 1.1 までの変更
 
@@ -72,10 +72,10 @@
 
                     struct t_if_softc {
                        T_IF_ADDR         ifaddr;
-                       UH             timer;
+                       UH                timer;
                        T_IF_ETHER_SOFTC  *sc;
-                       ID             semid_txb_ready;
-                       ID             semid_rxb_ready;
+                       ID                semid_txb_ready;
+                       ID                semid_rxb_ready;
                        };
                     typedef struct t_if_softc T_IF_SOFTC;
 
@@ -1138,3 +1138,26 @@
 
    (8)   送信ウィンドバッファの省コピー機能を有効にした時、 TCP の再送
          制御が正しく動作しないことがある問題を修正した。 
+
+8.  リリース 1.5.2 から 1.5.3 までの変更
+
+   (1)   ターゲット OS が ASP、 ネットワーク層が IPv4 で、データグラム
+         の分割・再構成行うことを指定する IP4_CFG_FRAGMENT を定義した
+         時、SEM_IP4_FRAG_QUEUE が未定義のエラーとなる問題を修正した。
+
+   (2)   tinet.pdf、 「7.2 ファイルの作成、 設定」で、 $(APP_DIR) を
+         $(APPLDIR) に変更した。
+
+   (3)   tinet.pdf、 「8.2 ファイルの作成、設定」で、$(APP_DIR) の記述
+         内容を変更した。
+
+   (4)   tinet_sample.pdf、 「2. サンプルアプリケーションの構築」、
+         「(1) TINET コンフィギュレーションスクリプトの実行」、 「[2]
+         TOPPERS/JSP 用 TINET コンフィギュレーションスクリプトの実行」
+         から、オプション -d を削除した。
+
+   (5)   tinet_sample.pdf、「3. TINET コンフィギュレーションスクリプト
+         のオプション」の記述を全面的に見直した。 
+
+   (6)   リトルエンディアンのプロセッサで、ICMP エラーの宛先アドレスの
+         バイトオーダーが逆になる問題を修正した。 

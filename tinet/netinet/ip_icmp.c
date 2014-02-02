@@ -366,7 +366,7 @@ icmp_error (uint8_t code, T_NET_BUF *input)
 	T_IP4_HDR	*ip4h;
 	T_ICMP4_HDR	*icmp4h;
 	T_NET_BUF	*output;
-    T_IN4_ADDR  addr;
+	T_IN4_ADDR	saddr;
 	uint_t		len, ip4hl, align;
 
 	ip4h  = GET_IP4_HDR(input);
@@ -378,9 +378,9 @@ icmp_error (uint8_t code, T_NET_BUF *input)
 	else
 		len = 8;
 	
-    addr = ntohl(ip4h->src);
+	saddr = ntohl(ip4h->src);
 	if (in4_get_datagram(&output, (uint_t)(ICMP4_HDR_SIZE + ip4hl + len), 0,
-	                     &addr, NULL, IPPROTO_ICMP, IP4_DEFTTL, 
+	                     &saddr, NULL, IPPROTO_ICMP, IP4_DEFTTL, 
 	                     NBA_SEARCH_ASCENT, TMO_ICMP_OUTPUT) != E_OK)
 		return;
 
