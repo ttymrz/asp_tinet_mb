@@ -1,0 +1,149 @@
+                  TCP/IP プロトコルスタック（TINET）
+         リリース 1.4 からリリース 1.5 への移行［2009/10/30］
+
+1.  移行方法
+
+1. 1  TOPPERS/JSP 環境における移行方法
+
+  TINET リリース 1.4 から TINET リリース 1.5 へ移行では、 TINET リリー
+ス 1.5 の配布ファイルを TINET リリース 1.4 に上書きすることは推奨しな
+い。 これは、TINET リリース 1.5 の配布ファイルに含まれているコンパイル
+時コンフィギュレーションパラメータファイル（tinet_cpu_config.h 等）に
+より、 TINET リリース 1.4 用の独自のコンパイル時コンフィギュレーション
+パラメータファイルの内容が失われる可能性があるためである。 従って、
+TINET リリース 1.5 の配布ファイルを必ず異なるディレクトリに展開してか
+ら移行することを推奨する。
+  ここでは、 IPv4 による応用プログラムの TINET を、 TINET リリース 1.4
+から TINET リリース 1.5 に移行する例を述べる。
+
+   (1)   TINET リリース 1.4 の JSP ルートディレクトリを $(DIR_1.4)、
+         TINET リリース 1.5 の JSP ルートディレクトリを $(DIR_1.5) とする。
+
+   (2)   $(DIR_1.5) に、 TINET リリース 1.5 の配布ファイル
+         tinet-1.5.tar.gz を展開する。
+
+   (3)   $(DIR_1.4) のディレクトリ tinet を削除する。
+
+   (4)   $(DIR_1.5) のディレクトリ tinet を $(DIR_1.4) にコピーする。
+
+   (5)   $(DIR_1.4)/tinet/cfg で、 TINET-1.5 の TINET コンフィギュレー
+         タを生成する。
+
+   (6)   通常の応用プログラムの生成は TINET リリース 1.4 と同じである。
+
+1. 2  TOPPERS/JSP 環境→ TOPPERS/ASP 環境への移行方法
+
+  標準的なアプリケーションプログラムの移行方法について述べる。 
+
+   (1)   Makefile（Makefile）
+           TINET 用の定義の変更はないが、 それぞれの環境の Makefile は
+         全く互換性がないので、 TINET ユーザズマニュアルの「7.3 アプリ
+         ケーションの Makefile」を参照して変更すること。
+   (2)   サンプルプログラム本体（$(UNAME).c）
+           TOPPERS/ASP では、データ型およびマクロは C99 に準拠したもの
+         に変更されているので、 これに合わせて変更する必要がある。 
+           また、 インクルードファイルが異なっている。TOPPERS/JSP 環境
+         でのインクルードファイルの指定
+
+            #include <t_services.h>
+            #include "kernel_id.h"
+            #include "tinet_id.h"
+
+         を、TOPPERS/ASP 環境では、以下のように変更する。
+
+            #include <kernel.h>
+            #include <t_syslog.h>
+            #include "kernel_cfg.h"
+            #include "tinet_cfg.h"
+
+   (3)   サンプルプログラムのヘッダファイル（$(UNAME).h）
+           TOPPERS/ASP では、データ型およびマクロは C99 に準拠したもの
+         に変更されているので、 これに合わせて変更する必要がある。 
+           また、 インクルードファイルが異なっている。TOPPERS/JSP 環境
+         でのインクルードファイルの指定
+
+            #include <t_services.h>
+
+         を、TOPPERS/ASP 環境では、以下のように変更する。
+
+            #include <tinet_defs.h>
+
+   (4)   サンプルプログラム用 ASP コンフィギュレーションファイル
+         （$(UNAME).cfg）
+           #include と INCLUDE の取扱いが異なっているので、 これに合わ
+         せて変更する必要がある。 以下に変更例を示す。TOPPERS/JSP 環境
+         での指定
+
+            #include "echos4.h"
+            #include "../systask/timer.cfg"
+            #include "../systask/serial.cfg"
+            #include "../systask/logtask.cfg"
+            #include "../tinet.cfg"
+            INCLUDE("\"tinet_id.h\"");
+            INCLUDE("\"echos4.h\"");
+
+         を、TOPPERS/ASP 環境では、以下のように変更する。
+
+            #include "echos4.h"
+            INCLUDE("../syssvc/serial.cfg");
+            INCLUDE("../syssvc/logtask.cfg");
+            INCLUDE("target_timer.cfg");
+            INCLUDE("../tinet_asp.cfg");
+
+   (5)   サンプルプログラム用 TINET コンフィギュレーションファイル
+         （tinet_$(UNAME).cfg）
+           #include と INCLUDE の取扱いが異なっているので、 これに合わ
+         せて変更する必要がある。 以下に変更例を示す。TOPPERS/JSP 環境
+         での指定
+
+            #include "echos4.h"
+            INCLUDE("\"echos4.h\"");
+
+         を、TOPPERS/ASP 環境では、以下のように変更する。
+
+            #include "echos4.h"
+
+   (6)   サンプルプログラム用ルーティング表（route_cfg.c）
+           インクルードファイルが異なっている。 TOPPERS/JSP 環境でのイ
+         ンクルードファイルの指定
+
+            #include <s_services.h>
+            #include <t_services.h>
+
+         を、TOPPERS/ASP 環境では、以下のように変更する。
+
+            #include <kernel.h>
+
+   (7)   サンプルプログラム用コンパイル時指定コンフィギュレーション
+         （tinet_app_config.h）
+           変更点はない。
+
+2.  変更必須項目
+
+  以下に、TINET リリース 1.5 で変更され、変更が必須の項目を示す。
+
+   (1)   ITRON TCP/IP API の仕様に定義されているコールバック関数の引数
+         p_parblk に関して、アドレス渡しが正しいが、値渡しとしていた実
+         装上の誤りを修正した。 このため、コールバック関数を実装してい
+         るアプリケーションプログラムでは、p_parblk の参照に関して、次
+         のようなコード
+
+            nblk_error = (ER)p_parblk;
+
+         を以下のように変更する必要がある。 
+
+            nblk_error = *(ER*)p_parblk;
+
+         なお、TINET リリース 1.4 以前との互換性維持を目的として、値渡
+         しにするためのコンパイル時コンフィギュレーションパラメータが
+         新設されている。
+
+         [1]   TCP_CFG_NON_BLOCKING_COMPAT14
+               TCP のコールバック関数の呼び出しで p_parblk を値渡しにする。
+         [2]   UDP_CFG_NON_BLOCKING_COMPAT14
+               UDP のコールバック関数の呼び出しで p_parblk を値渡しにする。
+
+3.  変更推奨項目
+
+  TINET リリース 1.4 から TINET リリース 1.5 へ移行において、 変更また
+は新たに定義すべき推奨項目はない。 

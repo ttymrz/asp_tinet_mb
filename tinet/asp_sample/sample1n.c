@@ -3,7 +3,7 @@
  * 
  *  Copyright (C) 2001-2009 by Dep. of Computer Science and Engineering
  *                   Tomakomai National College of Technology, JAPAN
- *  Copyright (C) 2012-2013 by Tetsuya Morizumi
+ *  Copyright (C) 2012-2014 by Tetsuya Morizumi
  *
  *  上記著作権者は，以下の (1)〜(4) の条件か，Free Software Foundation 
  *  によって公表されている GNU General Public License の Version 2 に記

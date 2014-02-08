@@ -6,7 +6,7 @@ This is unofficial porting of [TOPPERS/ASP][TOPPERS/ASP] and [TINET][TINET] for 
 Based on:
 
  * asp-1.8.0
- * TINET 1.5.2
+ * TINET 1.5.3
 
 The [TOPPERS/ASP] is a real-time kernel based on [uITRON][ITRON] 4.0 specification.
 The [TINET] is a compact TCP/IP protocol stack based on the [ITRON] TCP/IP API specification.
